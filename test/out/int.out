@@ -1,0 +1,327 @@
+1produced by make_input.rb                                                       
+ CSCALE =    1.00000     THETAD =   0.00000   NOTWO =   0  NEGL =   0  IRSTRT =   0  ITLIM =   0  NOLIM =   0
+   0  1  4 11  4 65 65  0
+   8  1  S  1 Pz  1 Px  1Dxz  1 Py  1Dyz  1Dxy  1xyz
+   7
+   2  3  4
+   2  5  6
+   2  7  8
+   3  5  7
+   3  6  8
+   4  5  8
+   4  6  7
+   1  1
+   3  3  5  2
+   5  1  1  7  4  6
+   7  2  3  5  2  8  5  3
+   1  1  1
+   1
+   3  3  2
+   1  0  0
+   0  1  0
+   0  0  1
+   5  6  3
+  -1 -1  4  0  0  0
+   1 -1  0  0  0  0
+   0  0  0  1  0  0
+   0  0  0  0  1  0
+   0  0  0  0  0  1
+   7 10  4
+   0  0  4  0 -9  0 -9  0  0  0
+  -1  0  0  0  0 -1  0 16  0  0
+   0 -1  0 -1  0  0  0  0 16  0
+   0  0  0  0  1  0 -1  0  0  0
+   0  0  0  0  0  0  0  0  0  1
+   0 -1  0  9  0  0  0  0  0  0
+  -1  0  0  0  0  9  0  0  0  0
+   1  1    
+    1.5000000       0.0000000       1.0000000       0.0000000    
+   1  1    
+   0.75000000       0.0000000       1.0000000       0.0000000    
+   1  1    
+   0.37500000       0.0000000       1.0000000       0.0000000    
+   1  1    
+   0.18750000       0.0000000       1.0000000       0.0000000    
+   1  2    
+    3.0000000      -1.0000000       1.0000000       0.0000000    
+   1  2    
+    1.5000000     -0.50000000       1.0000000       0.0000000    
+   1  2    
+   0.75000000       0.0000000       1.0000000       0.0000000    
+   1  2    
+   0.37500000       0.0000000       1.0000000       0.0000000    
+   1  3    
+   0.26666600       0.0000000       1.0000000       0.0000000    
+   1  3    
+   0.88888000E-01   0.0000000       1.0000000       0.0000000    
+   1  4    
+   0.35000000       0.0000000       1.0000000       0.0000000    
+  He 11  1 2.
+     0.00000000    0.00000000    0.00000000
+   1  1
+   2  1
+   3  1
+   4  1
+   5  2
+   6  2
+   7  2
+   8  2
+   9  3
+  10  3
+  11  4
+1            THIS PROGRAM COMPUTES INTEGRALS OVER SYMMETRY ORBITALS.
+              THE ATOMIC ORBITALS ARE CONTRACTED GAUSSIAN ORBITALS.
+              THE POINT GROUPS ARE LIMITED TO D2H AND ITS SUBGROUPS.
+
+                                   R. M. PITZER
+                                  H. F. SCHAEFER
+
+
+
+0REFERENCES 
+
+      SYMMETRY ANALYSIS (EQUAL CONTRIBUTIONS),
+      R. M. PITZER, J.CHEM. PHYS. 58, 3111 (1973)./
+      AO INTEGRAL EVALUATION (HONDO),
+      M. DUPUIS, J. RYS, AND H. F. KING, J. CHEM. PHYS. 65, 111(1976).,
+
+
+
+
+
+
+
+
+
+
+
+
+
+             produced by make_input.rb                                                       
+
+
+
+
+0IRREDUCIBLE REPRESENTATION   1       2       3       4       5       6       7       8
+ DEGENERACY                   1       1       1       1       1       1       1       1
+ LABEL                         S      Pz      Px     Dxz      Py     Dyz     Dxy     xyz
+
+
+
+0DIRECT PRODUCT TABLE
+    (  S) (  S) =   S
+    (  S) ( Pz) =  Pz
+    (  S) ( Px) =  Px
+    (  S) (Dxz) = Dxz
+    (  S) ( Py) =  Py
+    (  S) (Dyz) = Dyz
+    (  S) (Dxy) = Dxy
+    (  S) (xyz) = xyz
+    ( Pz) (  S) =  Pz
+    ( Pz) ( Pz) =   S
+    ( Pz) ( Px) = Dxz
+    ( Pz) (Dxz) =  Px
+    ( Pz) ( Py) = Dyz
+    ( Pz) (Dyz) =  Py
+    ( Pz) (Dxy) = xyz
+    ( Pz) (xyz) = Dxy
+    ( Px) (  S) =  Px
+    ( Px) ( Pz) = Dxz
+    ( Px) ( Px) =   S
+    ( Px) (Dxz) =  Pz
+    ( Px) ( Py) = Dxy
+    ( Px) (Dyz) = xyz
+    ( Px) (Dxy) =  Py
+    ( Px) (xyz) = Dyz
+    (Dxz) (  S) = Dxz
+    (Dxz) ( Pz) =  Px
+    (Dxz) ( Px) =  Pz
+    (Dxz) (Dxz) =   S
+    (Dxz) ( Py) = xyz
+    (Dxz) (Dyz) = Dxy
+    (Dxz) (Dxy) = Dyz
+    (Dxz) (xyz) =  Py
+    ( Py) (  S) =  Py
+    ( Py) ( Pz) = Dyz
+    ( Py) ( Px) = Dxy
+    ( Py) (Dxz) = xyz
+    ( Py) ( Py) =   S
+    ( Py) (Dyz) =  Pz
+    ( Py) (Dxy) =  Px
+    ( Py) (xyz) = Dxz
+    (Dyz) (  S) = Dyz
+    (Dyz) ( Pz) =  Py
+    (Dyz) ( Px) = xyz
+    (Dyz) (Dxz) = Dxy
+    (Dyz) ( Py) =  Pz
+    (Dyz) (Dyz) =   S
+    (Dyz) (Dxy) = Dxz
+    (Dyz) (xyz) =  Px
+    (Dxy) (  S) = Dxy
+    (Dxy) ( Pz) = xyz
+    (Dxy) ( Px) =  Py
+    (Dxy) (Dxz) = Dyz
+    (Dxy) ( Py) =  Px
+    (Dxy) (Dyz) = Dxz
+    (Dxy) (Dxy) =   S
+    (Dxy) (xyz) =  Pz
+    (xyz) (  S) = xyz
+    (xyz) ( Pz) = Dxy
+    (xyz) ( Px) = Dyz
+    (xyz) (Dxz) =  Py
+    (xyz) ( Py) = Dxz
+    (xyz) (Dyz) =  Px
+    (xyz) (Dxy) =  Pz
+    (xyz) (xyz) =   S
+
+
+
+
+
+
+0NUCLEAR REPULSION ENERGY    0.00000000
+
+
+
+
+0PRIMITIVE AO INTEGRALS NEGLECTED IF EXPONENTIAL FACTOR BELOW 10**(-65)
+ CONTRACTED AO AND SO INTEGRALS NEGLECTED IF VALUE BELOW 10**(-65)
+ SYMMETRY ORBITAL INTEGRALS WRITTEN ON UNIT  3
+1             He ATOMS
+
+0NUCLEAR CHARGE   2.00
+
+0CENTER            X               Y               Z
+   1             0.00000000      0.00000000      0.00000000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS          1.500000       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  1  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS         0.7500000       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  2  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS         0.3750000       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  3  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS         0.1875000       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  4  S1
+  1,  1S  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS          3.000000      -1.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  1 Px1  1 Py1  1 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS          1.500000     -0.5000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  2 Px1  2 Py1  2 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         0.7500000       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  3 Px1  3 Py1  3 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         0.3750000       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  4 Px1  4 Py1  4 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          3D ORBITALS
+0ORBITAL EXPONENTS         0.2666660       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  5  S1  6  S1  1Dxy1  1Dxz1  1Dyz1
+  1,  XX -1.000  1.000  0.000  0.000  0.000
+  1,  YY -1.000 -1.000  0.000  0.000  0.000
+  1,  ZZ  2.000  0.000  0.000  0.000  0.000
+  1,  XY  0.000  0.000  1.000  0.000  0.000
+  1,  XZ  0.000  0.000  0.000  1.000  0.000
+  1,  YZ  0.000  0.000  0.000  0.000  1.000
+
+
+          3D ORBITALS
+0ORBITAL EXPONENTS         8.8888000E-02   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  7  S1  8  S1  2Dxy1  2Dxz1  2Dyz1
+  1,  XX -1.000  1.000  0.000  0.000  0.000
+  1,  YY -1.000 -1.000  0.000  0.000  0.000
+  1,  ZZ  2.000  0.000  0.000  0.000  0.000
+  1,  XY  0.000  0.000  1.000  0.000  0.000
+  1,  XZ  0.000  0.000  0.000  1.000  0.000
+  1,  YZ  0.000  0.000  0.000  0.000  1.000
+
+
+          4F ORBITALS
+0ORBITAL EXPONENTS         0.3500000       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  5 Pz1  5 Px1  5 Py1  6 Pz1  1xyz1  6 Py1  6 Px1
+  1, XXX  0.000 -1.000  0.000  0.000  0.000  0.000 -1.000
+  1, YYY  0.000  0.000 -1.000  0.000  0.000 -1.000  0.000
+  1, ZZZ  2.000  0.000  0.000  0.000  0.000  0.000  0.000
+  1, XXY  0.000  0.000 -1.000  0.000  0.000  3.000  0.000
+  1, XXZ -3.000  0.000  0.000  1.000  0.000  0.000  0.000
+  1, YYX  0.000 -1.000  0.000  0.000  0.000  0.000  3.000
+  1, YYZ -3.000  0.000  0.000 -1.000  0.000  0.000  0.000
+  1, ZZX  0.000  4.000  0.000  0.000  0.000  0.000  0.000
+  1, ZZY  0.000  0.000  4.000  0.000  0.000  0.000  0.000
+  1, XYZ  0.000  0.000  0.000  0.000  1.000  0.000  0.000
+1   CX   5983
+ ICXST     66
+                109 S INTEGRALS IN 1 BLOCKS
+                109 T INTEGRALS IN 1 BLOCKS
+                109 V INTEGRALS IN 1 BLOCKS
+               19220 INTEGRALS IN    24 BLOCKS

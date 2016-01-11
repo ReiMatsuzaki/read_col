@@ -1,0 +1,16 @@
+2/4/1/2
+  8  8
+ 8  1  0  0
+ 6  2  0  0
+ 6  3  0  0
+ 2  4  0  0
+ 6  5  0  0
+ 2  6  0  0
+ 2  7  0  0
+ 1  8  0  0
+  0
+ &SDCI  HFCONF=1,  MSYM=2, IDIRCI=1,
+  CILBL='He 1P SDCISingletPz', &END
+ &CIGUES  &END
+ &WRANGE  RNG1= 59.8000 ,RNG2= 61.9000 ,
+ NMESH=1,PNCSPC=1,DEGFAC=3.0 &END

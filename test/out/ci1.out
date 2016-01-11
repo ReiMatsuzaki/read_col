@@ -1,0 +1,410 @@
+1ECHO OF YOUR  1 TH INPUT DATA ... CHECK CAREFULLY BEFORE YOU DOUBT THE PROGRAM.
+ >>>1/4/2                                                                   
+ >>>  8  8                                                                  
+ >>> 8  1  0  0                                                             
+ >>> 6  2  0  0                                                             
+ >>> 6  3  0  0                                                             
+ >>> 2  4  0  0                                                             
+ >>> 6  5  0  0                                                             
+ >>> 2  6  0  0                                                             
+ >>> 2  7  0  0                                                             
+ >>> 1  8  0  0                                                             
+ >>>  0                                                                     
+ >>> $SDCI  HFCONF=1,   MSYM=1, IDIRCI=1,                                   
+ >>>  CILBL='He 1S SDCISingletSz', $END                                     
+ >>> $CIGUES  NCOL=2, $END                                                  
+
+
+
+ OPTIONS TO BE USED  10000/40000/20000/00000/
+0************************************************************
+
+
+
+ A COLUMBUS COMPLEX CONFIGURATION INTERACTION PROGRAM
+
+ THE INTEGRAL TRANSFORMATION PROGRAM
+
+
+ ORBINP REQUIRED     0.0000 SECONDS.
+
+
+ TRAOP =     0    0    0    0    0
+
+ STATISTICS FROM GENERAL INPUT FILE
+
+ NUMBER OF SYMMETRY IRREPS IN POINT GROUP IS   8
+
+ NUMBER OF BLOCKS OF ORBITALS IS   8
+
+ NUMBER OF ORBITALS IS   33
+
+ NUMBER OF ORBITALS TO BE TRANSFORMED IS   33
+
+ NUMBER OF FROZEN CORE ORBITALS IS   0
+
+ NUMBER OF FROZEN VIRTUAL ORBITALS IS   0
+
+ NUMBER OF EXTERNAL ORBITALS IN FOCI IS   0
+
+
+
+ BLOCK  1 HAS SYMMETRY  1 AND HAS    8 ORBITALS OF WHICH    8 ARE TRANSFORMED.
+
+ BLOCK  2 HAS SYMMETRY  2 AND HAS    6 ORBITALS OF WHICH    6 ARE TRANSFORMED.
+
+ BLOCK  3 HAS SYMMETRY  3 AND HAS    6 ORBITALS OF WHICH    6 ARE TRANSFORMED.
+
+ BLOCK  4 HAS SYMMETRY  4 AND HAS    2 ORBITALS OF WHICH    2 ARE TRANSFORMED.
+
+ BLOCK  5 HAS SYMMETRY  5 AND HAS    6 ORBITALS OF WHICH    6 ARE TRANSFORMED.
+
+ BLOCK  6 HAS SYMMETRY  6 AND HAS    2 ORBITALS OF WHICH    2 ARE TRANSFORMED.
+
+ BLOCK  7 HAS SYMMETRY  7 AND HAS    2 ORBITALS OF WHICH    2 ARE TRANSFORMED.
+
+ BLOCK  8 HAS SYMMETRY  8 AND HAS    1 ORBITALS OF WHICH    1 ARE TRANSFORMED.
+
+
+
+ FROM AO INTEGRAL FILE :
+
+ LABEL IS ... produced by make_input.rb                                                       
+
+ NUCLEAR REPULSION ENERGY IS         0.0000000000 AU.
+
+
+ TRANSFORMATION PREPARATION REQUIRED     0.0000 SECONDS.
+
+
+ READ IN ONE-ELECTRON INTEGRALS AND COEFFICIENTS
+
+ MO COEFFICIENTS READ USING THE FORMAT: (4F20.15)                       
+
+ GETV1E PROCESSED  109  S INTEGRALS.
+
+ GETV1E PROCESSED  109  T INTEGRALS.
+
+ GETV1E PROCESSED  109  V INTEGRALS.
+
+ GETV1E REQUIRED     0.0000 SECONDS.
+
+
+ FULL TRANSFORMATION MATRIX
+
+
+
+                     IRREP   S 
+
+                       1  S                  2  S                  3  S                  4  S                  5  S
+  1  S  He 1S   0.702767  0.000000   -0.680447  0.000000   -0.303633  0.000000    4.555309  0.000000    0.000000  0.000000
+  2  S  He 1S  -0.464188  0.000000    1.660322  0.000000    4.281903  0.000000   -9.194169  0.000000    0.000000  0.000000
+  3  S  He 1S   0.837580  0.000000   -3.679934  0.000000   -6.551123  0.000000    6.977027  0.000000    0.000000  0.000000
+  4  S  He 1S   0.034812  0.000000    3.029435  0.000000    2.831644  0.000000   -2.145466  0.000000    0.000000  0.000000
+  5  S  He 3D   0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000
+  6  S  He 3D   0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000   -0.087326  0.000000
+  7  S  He 3D   0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000
+  8  S  He 3D   0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.547920  0.000000
+
+ EIGENVALUES   -0.848351  0.000000    0.385171  0.000000    1.785035  0.000000    4.562675  0.000000    0.293536  0.000000
+
+                       6  S                  7  S                  8  S
+  1  S  He 1S   0.000000  0.000000    0.000000  0.000000    0.000000  0.000000
+  2  S  He 1S   0.000000  0.000000    0.000000  0.000000    0.000000  0.000000
+  3  S  He 1S   0.000000  0.000000    0.000000  0.000000    0.000000  0.000000
+  4  S  He 1S   0.000000  0.000000    0.000000  0.000000    0.000000  0.000000
+  5  S  He 3D  -0.050418  0.000000    0.000000  0.000000    0.358837  0.000000
+  6  S  He 3D   0.000000  0.000000    0.621524  0.000000    0.000000  0.000000
+  7  S  He 3D   0.316342  0.000000    0.000000  0.000000   -0.176731  0.000000
+  8  S  He 3D   0.000000  0.000000   -0.306107  0.000000    0.000000  0.000000
+
+ EIGENVALUES    0.293536  0.000000    1.097490  0.000000    1.097490  0.000000
+
+
+                     IRREP  Pz 
+
+                       1 Pz                  2 Pz                  3 Pz                  4 Pz                  5 Pz
+  1 Pz  He 2P  -0.073675 -0.042669   -0.269055 -0.150675    0.540619  0.136851   -2.766407 -0.500626    0.000000  0.000000
+  2 Pz  He 2P   0.256663  0.264216    0.641450  0.735002   -2.623901 -1.318718    3.439096  1.797644    0.000000  0.000000
+  3 Pz  He 2P  -0.776023 -0.393822   -2.557901 -0.831642    2.896833  1.575795   -1.990323 -1.599764    0.000000  0.000000
+  4 Pz  He 2P   1.550937  0.169641    1.771198  0.258900   -1.345858 -0.369070    0.848298  0.335048    0.000000  0.000000
+  5 Pz  He 4F   0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000
+  6 Pz  He 4F   0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.500000  0.000000
+
+ EIGENVALUES    0.645866 -0.023122    2.251768 -0.140007    5.750098 -0.823218   13.219202 -3.183289    1.558552  0.000000
+
+                       6 Pz
+  1 Pz  He 2P   0.000000  0.000000
+  2 Pz  He 2P   0.000000  0.000000
+  3 Pz  He 2P   0.000000  0.000000
+  4 Pz  He 2P   0.000000  0.000000
+  5 Pz  He 4F   0.129099  0.000000
+  6 Pz  He 4F   0.000000  0.000000
+
+ EIGENVALUES    1.558552  0.000000
+
+
+                     IRREP  Px 
+
+                       1 Px                  2 Px                  3 Px                  4 Px                  5 Px
+  1 Px  He 2P  -0.073675 -0.042669   -0.269055 -0.150675    0.540619  0.136851   -2.766407 -0.500626    0.000000  0.000000
+  2 Px  He 2P   0.256663  0.264216    0.641450  0.735002   -2.623901 -1.318718    3.439096  1.797644    0.000000  0.000000
+  3 Px  He 2P  -0.776023 -0.393822   -2.557901 -0.831642    2.896833  1.575795   -1.990323 -1.599764    0.000000  0.000000
+  4 Px  He 2P   1.550937  0.169641    1.771198  0.258900   -1.345858 -0.369070    0.848298  0.335048    0.000000  0.000000
+  5 Px  He 4F   0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.158114  0.000000
+  6 Px  He 4F   0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000
+
+ EIGENVALUES    0.645866 -0.023122    2.251768 -0.140007    5.750098 -0.823218   13.219202 -3.183289    1.558552  0.000000
+
+                       6 Px
+  1 Px  He 2P   0.000000  0.000000
+  2 Px  He 2P   0.000000  0.000000
+  3 Px  He 2P   0.000000  0.000000
+  4 Px  He 2P   0.000000  0.000000
+  5 Px  He 4F   0.000000  0.000000
+  6 Px  He 4F   0.204124  0.000000
+
+ EIGENVALUES    1.558552  0.000000
+
+
+                     IRREP Dxz 
+
+                       1Dxz                  2Dxz
+  1Dxz  He 3D  -0.174652  0.000000    1.243048  0.000000
+  2Dxz  He 3D   1.095840  0.000000   -0.612213  0.000000
+
+ EIGENVALUES    0.293536  0.000000    1.097490  0.000000
+
+
+                     IRREP  Py 
+
+                       1 Py                  2 Py                  3 Py                  4 Py                  5 Py
+  1 Py  He 2P  -0.073675 -0.042669   -0.269055 -0.150675    0.540619  0.136851   -2.766407 -0.500626    0.000000  0.000000
+  2 Py  He 2P   0.256663  0.264216    0.641450  0.735002   -2.623901 -1.318718    3.439096  1.797644    0.000000  0.000000
+  3 Py  He 2P  -0.776023 -0.393822   -2.557901 -0.831642    2.896833  1.575795   -1.990323 -1.599764    0.000000  0.000000
+  4 Py  He 2P   1.550937  0.169641    1.771198  0.258900   -1.345858 -0.369070    0.848298  0.335048    0.000000  0.000000
+  5 Py  He 4F   0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.158114  0.000000
+  6 Py  He 4F   0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000    0.000000  0.000000
+
+ EIGENVALUES    0.645866 -0.023122    2.251768 -0.140007    5.750098 -0.823218   13.219202 -3.183289    1.558552  0.000000
+
+                       6 Py
+  1 Py  He 2P   0.000000  0.000000
+  2 Py  He 2P   0.000000  0.000000
+  3 Py  He 2P   0.000000  0.000000
+  4 Py  He 2P   0.000000  0.000000
+  5 Py  He 4F   0.000000  0.000000
+  6 Py  He 4F   0.204124  0.000000
+
+ EIGENVALUES    1.558552  0.000000
+
+
+                     IRREP Dyz 
+
+                       1Dyz                  2Dyz
+  1Dyz  He 3D  -0.174652  0.000000    1.243048  0.000000
+  2Dyz  He 3D   1.095840  0.000000   -0.612213  0.000000
+
+ EIGENVALUES    0.293536  0.000000    1.097490  0.000000
+
+
+                     IRREP Dxy 
+
+                       1Dxy                  2Dxy
+  1Dxy  He 3D  -0.174652  0.000000    1.243048  0.000000
+  2Dxy  He 3D   1.095840  0.000000   -0.612213  0.000000
+
+ EIGENVALUES    0.293536  0.000000    1.097490  0.000000
+
+
+                     IRREP xyz 
+
+                       1xyz
+  1xyz  He 4F   1.000000  0.000000
+
+ EIGENVALUES    1.558552  0.000000
+
+
+0NUMBER OF BLOCKS TO BE TRANSFORMED IN-CORE IS 106
+
+ NUMBER OF BLOCKS TO BE TRANSFORMED OUT OF CORE IS    0
+
+ IN-CORE AO LIST REQUIRES    1 SEGMENTS.
+
+ OUT OF CORE AO LIST REQUIRES    0 SEGMENTS.
+
+ EACH SEGMENT HAS LENGTH  1999804 COMPLEX*16 WORDS.
+
+
+ CHKMO REQUIRED    0.0000 SECONDS.
+
+
+ TRAN1E WROTE     62 ONE-ELECTRON INTEGRALS IN   1 RECORDS.
+
+
+ TRAN1E REQUIRED     0.0000 SECONDS.
+
+
+
+ FIRST SORT STATISTICS : 
+
+ LENGTH OF RECORDS IS        805
+ NUMBER OF BINS IS    1
+ SCRATCH FILE USED IS  1
+ AMOUNT OF CORE NEEDED FOR IN-CORE ARRAYS IS   1543
+
+
+ INCIND REQUIRED     0.0000 SECONDS.
+
+
+ TWOAO PROCESSED      19220 TWO ELECTRON AO INTEGRALS.
+
+
+ TWOAO REQUIRED    0.0000 SECONDS.
+
+
+ THE SORTING FOR THIS STEP REQUIRED    0.000 SECONDS AND      19220 INTEGRALS WERE STORED IN         30 BUCKETS.
+
+
+ SRTINC READ IN      21169 INTEGRALS AND WROTE OUT      21169 INTEGRALS.
+
+
+ SRTINC REQUIRED    0.0000 SECONDS.
+
+
+ NSYM,INTPT,INTMX,SCRTFL =          8      1610      1610        34
+
+
+ NBKNBF =          8         6         6         2         6         2         2         1
+
+
+ TRAINC REQUIRED    0.0000 SECONDS.
+
+
+ FROM OUTPUT
+
+ NUMBER OF TRANSFORMED INTEGRALS PUT ON FILE IS      17470
+
+ NUMBER OF RECORDS IS     27
+
+
+ TRANSFORMATION REQUIRED    0.0000SECONDS.
+
+
+ ************************************************************************************************************************
+
+ PROGRAM OF CI MATRIX ELEMENTS
+
+ OPTIONS =    4   0   0   0   0
+0     NORB =  33     NSYM =  8
+0     NSYMOB =    8,   6,   6,   2,   6,   2,   2,   1,
+0     NSYMOF =    0,   8,  14,  20,  22,  28,  30,  32,
+
+ FROM TRANSFORMED INTEGRAL FILE:
+
+ LABEL IS ...produced by make_input.rb                                                       
+
+ NUCLEAR REPULSION ENERGY IS        0.0000000000
+
+ FROZEN CORE ENERGY       IS        0.0000000000        0.0000000000
+0   2 :  1  S-->  2  S        3 :  1  S-->  3  S        4 :  1  S-->  4  S        5 :  1  S-->  5  S        6 :  1  S-->  6  S
+0   7 :  1  S-->  7  S        8 :  1  S-->  8  S
+0   9 :  1  S-->  2  S       10 :  1  S-->  3  S       11 :  1  S-->  3  S       12 :  1  S-->  4  S       13 :  1  S-->  4  S
+        1  S-->  2  S            1  S-->  2  S            1  S-->  3  S            1  S-->  2  S            1  S-->  3  S
+0  14 :  1  S-->  4  S       15 :  1  S-->  5  S       16 :  1  S-->  5  S       17 :  1  S-->  5  S       18 :  1  S-->  5  S
+        1  S-->  4  S            1  S-->  2  S            1  S-->  3  S            1  S-->  4  S            1  S-->  5  S
+0  19 :  1  S-->  6  S       20 :  1  S-->  6  S       21 :  1  S-->  6  S       22 :  1  S-->  6  S       23 :  1  S-->  6  S
+        1  S-->  2  S            1  S-->  3  S            1  S-->  4  S            1  S-->  5  S            1  S-->  6  S
+0  24 :  1  S-->  7  S       25 :  1  S-->  7  S       26 :  1  S-->  7  S       27 :  1  S-->  7  S       28 :  1  S-->  7  S
+        1  S-->  2  S            1  S-->  3  S            1  S-->  4  S            1  S-->  5  S            1  S-->  6  S
+0  29 :  1  S-->  7  S       30 :  1  S-->  8  S       31 :  1  S-->  8  S       32 :  1  S-->  8  S       33 :  1  S-->  8  S
+        1  S-->  7  S            1  S-->  2  S            1  S-->  3  S            1  S-->  4  S            1  S-->  5  S
+0  34 :  1  S-->  8  S       35 :  1  S-->  8  S       36 :  1  S-->  8  S       37 :  1  S-->  1 Pz       38 :  1  S-->  2 Pz
+        1  S-->  6  S            1  S-->  7  S            1  S-->  8  S            1  S-->  1 Pz            1  S-->  1 Pz
+0  39 :  1  S-->  2 Pz       40 :  1  S-->  3 Pz       41 :  1  S-->  3 Pz       42 :  1  S-->  3 Pz       43 :  1  S-->  4 Pz
+        1  S-->  2 Pz            1  S-->  1 Pz            1  S-->  2 Pz            1  S-->  3 Pz            1  S-->  1 Pz
+0  44 :  1  S-->  4 Pz       45 :  1  S-->  4 Pz       46 :  1  S-->  4 Pz       47 :  1  S-->  5 Pz       48 :  1  S-->  5 Pz
+        1  S-->  2 Pz            1  S-->  3 Pz            1  S-->  4 Pz            1  S-->  1 Pz            1  S-->  2 Pz
+0  49 :  1  S-->  5 Pz       50 :  1  S-->  5 Pz       51 :  1  S-->  5 Pz       52 :  1  S-->  6 Pz       53 :  1  S-->  6 Pz
+        1  S-->  3 Pz            1  S-->  4 Pz            1  S-->  5 Pz            1  S-->  1 Pz            1  S-->  2 Pz
+0  54 :  1  S-->  6 Pz       55 :  1  S-->  6 Pz       56 :  1  S-->  6 Pz       57 :  1  S-->  6 Pz       58 :  1  S-->  1 Px
+        1  S-->  3 Pz            1  S-->  4 Pz            1  S-->  5 Pz            1  S-->  6 Pz            1  S-->  1 Px
+0  59 :  1  S-->  2 Px       60 :  1  S-->  2 Px       61 :  1  S-->  3 Px       62 :  1  S-->  3 Px       63 :  1  S-->  3 Px
+        1  S-->  1 Px            1  S-->  2 Px            1  S-->  1 Px            1  S-->  2 Px            1  S-->  3 Px
+0  64 :  1  S-->  4 Px       65 :  1  S-->  4 Px       66 :  1  S-->  4 Px       67 :  1  S-->  4 Px       68 :  1  S-->  5 Px
+        1  S-->  1 Px            1  S-->  2 Px            1  S-->  3 Px            1  S-->  4 Px            1  S-->  1 Px
+0  69 :  1  S-->  5 Px       70 :  1  S-->  5 Px       71 :  1  S-->  5 Px       72 :  1  S-->  5 Px       73 :  1  S-->  6 Px
+        1  S-->  2 Px            1  S-->  3 Px            1  S-->  4 Px            1  S-->  5 Px            1  S-->  1 Px
+0  74 :  1  S-->  6 Px       75 :  1  S-->  6 Px       76 :  1  S-->  6 Px       77 :  1  S-->  6 Px       78 :  1  S-->  6 Px
+        1  S-->  2 Px            1  S-->  3 Px            1  S-->  4 Px            1  S-->  5 Px            1  S-->  6 Px
+0  79 :  1  S-->  1Dxz       80 :  1  S-->  2Dxz       81 :  1  S-->  2Dxz       82 :  1  S-->  1 Py       83 :  1  S-->  2 Py
+        1  S-->  1Dxz            1  S-->  1Dxz            1  S-->  2Dxz            1  S-->  1 Py            1  S-->  1 Py
+0  84 :  1  S-->  2 Py       85 :  1  S-->  3 Py       86 :  1  S-->  3 Py       87 :  1  S-->  3 Py       88 :  1  S-->  4 Py
+        1  S-->  2 Py            1  S-->  1 Py            1  S-->  2 Py            1  S-->  3 Py            1  S-->  1 Py
+0  89 :  1  S-->  4 Py       90 :  1  S-->  4 Py       91 :  1  S-->  4 Py       92 :  1  S-->  5 Py       93 :  1  S-->  5 Py
+        1  S-->  2 Py            1  S-->  3 Py            1  S-->  4 Py            1  S-->  1 Py            1  S-->  2 Py
+0  94 :  1  S-->  5 Py       95 :  1  S-->  5 Py       96 :  1  S-->  5 Py       97 :  1  S-->  6 Py       98 :  1  S-->  6 Py
+        1  S-->  3 Py            1  S-->  4 Py            1  S-->  5 Py            1  S-->  1 Py            1  S-->  2 Py
+0  99 :  1  S-->  6 Py      100 :  1  S-->  6 Py      101 :  1  S-->  6 Py      102 :  1  S-->  6 Py      103 :  1  S-->  1Dyz
+        1  S-->  3 Py            1  S-->  4 Py            1  S-->  5 Py            1  S-->  6 Py            1  S-->  1Dyz
+0 104 :  1  S-->  2Dyz      105 :  1  S-->  2Dyz      106 :  1  S-->  1Dxy      107 :  1  S-->  2Dxy      108 :  1  S-->  2Dxy
+        1  S-->  1Dyz            1  S-->  2Dyz            1  S-->  1Dxy            1  S-->  1Dxy            1  S-->  2Dxy
+0 109 :  1  S-->  1xyz
+        1  S-->  1xyz
+
+
+ NUMBER OF CONFIGURAIONS =     109
+ NUMBER OF OCCUPANCIES   =     109
+
+ THERE ARE     109 ONE ELECTRON INTEGRALS
+ NUMBER OF ONE ELECTRON INTEGRALS READ =       62
+ NUMBER OF TWO-ELECTRON INTEGRALS READ =    17470
+ NUMBER OF TWO-ELECTRON INTEGRALS CONTRIBUTING TO CI MATRIX =     6194
+
+
+ ************************************************************************************************************************
+
+ CI EIGENVALUE PROGRAM
+
+ OPTIONS =    2   0   0   0   0
+
+
+
+ ************************************************************
+          INITIAL CONDITIONS OF DAVIDSON'S METHOD
+ NUMBER OF CONFIGURATIONS  109
+ K,HDIG(K)    1       -2.6370625357        0.0000000000
+ K,HDIG(K)   21        3.0674748063        0.0000000000
+ K,HDIG(K)   41        5.8897873261       -0.8484930696
+ K,HDIG(K)   61        4.3529613679       -0.7170526646
+ K,HDIG(K)   81        0.8653772744        0.0000000000
+ K,HDIG(K)  101        1.7932465866        0.0000000000
+ CCSFP VECTOR IS USED AS THE INITIAL GUESS VECTOR
+
+
+
+ ************************************************************
+ 
+
+     KIKIT =   1
+
+ ITER =  1  ROOT =  1  ENERGY =    -2.63706254    0.00000000  DIFF =  -0.29D+01 -0.78D-01  Q =   0.21D+00 -0.55D-02
+ ITER =  2  ROOT =  1  ENERGY =    -2.67169187    0.00010189  DIFF =  -0.35D-01  0.10D-03  Q =   0.20D-02 -0.78D-04
+ ITER =  3  ROOT =  1  ENERGY =    -2.67194767    0.00010093  DIFF =  -0.26D-03 -0.96D-06  Q =   0.24D-04  0.80D-06
+ ITER =  4  ROOT =  1  ENERGY =    -2.67195235    0.00010096  DIFF =  -0.47D-05  0.35D-07  Q =   0.63D-06 -0.82D-07
+ ITER =  5  ROOT =  1  ENERGY =    -2.67195253    0.00010097  DIFF =  -0.18D-06  0.45D-08  Q =   0.78D-08  0.65D-09
+
+
+
+ ************************************************************
+
+          FINAL DATA FOR RUN
+
+
+ EIGENVALUE               ELECTRONIC ENERGY               TOTAL ENERGY
+      1        -2.67195252813574    0.00010096865205      -2.671952528135736137926415    0.000100968652047318794055
+
+          EIGENVECTORS OF CI MATRIX:
+
+ COMPONENTS GT.     0.020
+
