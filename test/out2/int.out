@@ -1,0 +1,805 @@
+1produced by make_input.rb                                                       
+ CSCALE =    1.00000     THETAD =   0.00000   NOTWO =   0  NEGL =   0  IRSTRT =   0  ITLIM =   0  NOLIM =   0
+   0  1  4 43  4 65 65  0
+   8  1  S  1 Pz  1 Px  1Dxz  1 Py  1Dyz  1Dxy  1xyz
+   7
+   2  3  4
+   2  5  6
+   2  7  8
+   3  5  7
+   3  6  8
+   4  5  8
+   4  6  7
+   1  1
+   3  3  5  2
+   5  1  1  7  4  6
+   7  2  3  5  2  8  5  3
+   1  1  1
+   1
+   3  3  2
+   1  0  0
+   0  1  0
+   0  0  1
+   5  6  3
+  -1 -1  4  0  0  0
+   1 -1  0  0  0  0
+   0  0  0  1  0  0
+   0  0  0  0  1  0
+   0  0  0  0  0  1
+   7 10  4
+   0  0  4  0 -9  0 -9  0  0  0
+  -1  0  0  0  0 -1  0 16  0  0
+   0 -1  0 -1  0  0  0  0 16  0
+   0  0  0  0  1  0 -1  0  0  0
+   0  0  0  0  0  0  0  0  0  1
+   0 -1  0  9  0  0  0  0  0  0
+  -1  0  0  0  0  9  0  0  0  0
+   1  1    
+   0.17000000E-04   0.0000000       1.0000000       0.0000000    
+   1  1    
+   0.48000000E-04   0.0000000       1.0000000       0.0000000    
+   1  1    
+   0.13400000E-03   0.0000000       1.0000000       0.0000000    
+   1  1    
+   0.37600000E-03   0.0000000       1.0000000       0.0000000    
+   1  1    
+   0.10560000E-02   0.0000000       1.0000000       0.0000000    
+   1  1    
+   0.29670000E-02   0.0000000       1.0000000       0.0000000    
+   1  1    
+   0.83370000E-02   0.0000000       1.0000000       0.0000000    
+   1  1    
+   0.23428000E-01   0.0000000       1.0000000       0.0000000    
+   1  1    
+   0.65832000E-01   0.0000000       1.0000000       0.0000000    
+   1  1    
+   0.18498700       0.0000000       1.0000000       0.0000000    
+   1  1    
+   0.51981400       0.0000000       1.0000000       0.0000000    
+   1  1    
+    1.4606790       0.0000000       1.0000000       0.0000000    
+   1  1    
+    4.1045070       0.0000000       1.0000000       0.0000000    
+   1  1    
+    11.533670       0.0000000       1.0000000       0.0000000    
+   1  1    
+    32.409600       0.0000000       1.0000000       0.0000000    
+   1  1    
+    91.070980       0.0000000       1.0000000       0.0000000    
+   1  1    
+    255.90940       0.0000000       1.0000000       0.0000000    
+   1  1    
+    719.10550       0.0000000       1.0000000       0.0000000    
+   1  2    
+   0.51000000E-04   0.0000000       1.0000000       0.0000000    
+   1  2    
+   0.14200000E-03   0.0000000       1.0000000       0.0000000    
+   1  2    
+   0.39800000E-03   0.0000000       1.0000000       0.0000000    
+   1  2    
+   0.11150000E-02   0.0000000       1.0000000       0.0000000    
+   1  2    
+   0.31230000E-02   0.0000000       1.0000000       0.0000000    
+   1  2    
+   0.87440000E-02   0.0000000       1.0000000       0.0000000    
+   1  2    
+   0.24482000E-01   0.0000000       1.0000000       0.0000000    
+   1  2    
+   0.68551000E-01   0.0000000       1.0000000       0.0000000    
+   1  2    
+   0.19194200       0.0000000       1.0000000       0.0000000    
+   1  2    
+   0.53743900       0.0000000       1.0000000       0.0000000    
+   1  2    
+    1.5048280       0.0000000       1.0000000       0.0000000    
+   1  2    
+    4.2135170       0.0000000       1.0000000       0.0000000    
+   1  2    
+    11.797850       0.0000000       1.0000000       0.0000000    
+   1  2    
+    33.033980       0.0000000       1.0000000       0.0000000    
+   1  2    
+    92.495140       0.0000000       1.0000000       0.0000000    
+   1  2    
+    258.98640       0.0000000       1.0000000       0.0000000    
+   1  3    
+    2.0000000       0.0000000       1.0000000       0.0000000    
+   1  3    
+   0.80000000       0.0000000       1.0000000       0.0000000    
+   1  3    
+   0.30000000       0.0000000       1.0000000       0.0000000    
+   1  3    
+   0.10000000       0.0000000       1.0000000       0.0000000    
+   1  4    
+   0.30000000       0.0000000       1.0000000       0.0000000    
+  10  2    
+   0.35062000E-01 -0.11915000E-01 -0.75300000E-03  0.19800000E-01
+   0.63352000E-01 -0.16627000E-01  0.10180000      0.13248000    
+   0.11308900     -0.22121000E-01  0.35168000      0.12098000    
+   0.20625200     -0.28703000E-01  0.38075000     -0.51789000E-01
+   0.39079800     -0.36718000E-01  0.21431000     -0.11154000    
+   0.78051900     -0.46722000E-01  0.81586000E-01 -0.70892000E-01
+    1.6739840     -0.59743000E-01  0.24300000E-01 -0.28499000E-01
+    3.9719090     -0.77885000E-01  0.59840000E-02 -0.84210000E-02
+    11.057370     -0.10645700      0.11810000E-02 -0.18450000E-02
+    42.321409     -0.16657500      0.15800000E-03 -0.26100000E-03
+  10  2    
+   0.23667000E-01 -0.23016000E-01  0.38160000E-02  0.19510000E-01
+   0.43397000E-01 -0.31665000E-01  0.21540000     -0.73600000E-01
+   0.77162000E-01 -0.41995000E-01 -0.14657000     -0.65949000    
+   0.13924700     -0.54703000E-01 -0.85121000     -0.11509000    
+   0.26103600     -0.70425000E-01 -0.41298000      0.43757000    
+   0.51736000     -0.90099000E-01 -0.22216000E-01  0.27650000    
+    1.1046800     -0.11556300      0.33461000E-01  0.89181000E-01
+    2.6156550     -0.15082500      0.14995000E-01  0.20997000E-01
+    7.2757670     -0.20615300      0.37290000E-02  0.38990000E-02
+    27.837319     -0.32238800      0.55300000E-03  0.50100000E-03
+  10  2    
+   0.69470000E-02 -0.19274000E-01 -0.68660000E-02  0.16602000E-01
+   0.13328000E-01 -0.25303000E-01  0.12228000     -0.32646000    
+   0.23489000E-01 -0.32818000E-01  -1.3393000       1.4568000    
+   0.41080000E-01 -0.42635000E-01   4.7417000     -0.62263000    
+   0.73869000E-01 -0.55655000E-01  -3.6031000      -4.3659000    
+   0.14044200     -0.72894000E-01  -2.2800000       2.7584000    
+   0.29036000     -0.95610000E-01  0.79110000       1.0867000    
+   0.67470200     -0.12644800      0.34447000      0.28034000E-01
+    1.8609960     -0.17348800      0.61348000E-01 -0.26118000E-01
+    7.0985880     -0.27077700      0.70090000E-02 -0.52390000E-02
+  10  2    
+   0.62000000E-03 -0.80770000E-02  0.11951000E-01  0.82440000E-01
+   0.11880000E-02 -0.94850000E-02 -0.66998000      0.50274000    
+   0.19740000E-02 -0.11281000E-01  -3.4925000      -3.4264000    
+   0.31660000E-02 -0.13644000E-01   15.446000      -11.865000    
+   0.50930000E-02 -0.16875000E-01   13.558000       52.746000    
+   0.84290000E-02 -0.21495000E-01   96.850000       41.770000    
+   0.14749000E-01 -0.28482000E-01  -130.95000       32.120000    
+   0.28373000E-01 -0.39848000E-01   86.186000      -57.975000    
+   0.64510000E-01 -0.60343000E-01  -34.543000       22.124000    
+   0.20883400     -0.10554500       6.2168000      0.15974000    
+  He 43  1 2.
+     0.00000000    0.00000000    0.00000000
+   1  1
+   2  1
+   3  1
+   4  1
+   5  1
+   6  1
+   7  1
+   8  1
+   9  1
+  10  1
+  11  1
+  12  1
+  13  1
+  14  1
+  15  1
+  16  1
+  17  1
+  18  1
+  19  2
+  20  2
+  21  2
+  22  2
+  23  2
+  24  2
+  25  2
+  26  2
+  27  2
+  28  2
+  29  2
+  30  2
+  31  2
+  32  2
+  33  2
+  34  2
+  35  3
+  36  3
+  37  3
+  38  3
+  39  4
+  40  2
+  41  2
+  42  2
+  43  2
+1            THIS PROGRAM COMPUTES INTEGRALS OVER SYMMETRY ORBITALS.
+              THE ATOMIC ORBITALS ARE CONTRACTED GAUSSIAN ORBITALS.
+              THE POINT GROUPS ARE LIMITED TO D2H AND ITS SUBGROUPS.
+
+                                   R. M. PITZER
+                                  H. F. SCHAEFER
+
+
+
+0REFERENCES 
+
+      SYMMETRY ANALYSIS (EQUAL CONTRIBUTIONS),
+      R. M. PITZER, J.CHEM. PHYS. 58, 3111 (1973)./
+      AO INTEGRAL EVALUATION (HONDO),
+      M. DUPUIS, J. RYS, AND H. F. KING, J. CHEM. PHYS. 65, 111(1976).,
+
+
+
+
+
+
+
+
+
+
+
+
+
+             produced by make_input.rb                                                       
+
+
+
+
+0IRREDUCIBLE REPRESENTATION   1       2       3       4       5       6       7       8
+ DEGENERACY                   1       1       1       1       1       1       1       1
+ LABEL                         S      Pz      Px     Dxz      Py     Dyz     Dxy     xyz
+
+
+
+0DIRECT PRODUCT TABLE
+    (  S) (  S) =   S
+    (  S) ( Pz) =  Pz
+    (  S) ( Px) =  Px
+    (  S) (Dxz) = Dxz
+    (  S) ( Py) =  Py
+    (  S) (Dyz) = Dyz
+    (  S) (Dxy) = Dxy
+    (  S) (xyz) = xyz
+    ( Pz) (  S) =  Pz
+    ( Pz) ( Pz) =   S
+    ( Pz) ( Px) = Dxz
+    ( Pz) (Dxz) =  Px
+    ( Pz) ( Py) = Dyz
+    ( Pz) (Dyz) =  Py
+    ( Pz) (Dxy) = xyz
+    ( Pz) (xyz) = Dxy
+    ( Px) (  S) =  Px
+    ( Px) ( Pz) = Dxz
+    ( Px) ( Px) =   S
+    ( Px) (Dxz) =  Pz
+    ( Px) ( Py) = Dxy
+    ( Px) (Dyz) = xyz
+    ( Px) (Dxy) =  Py
+    ( Px) (xyz) = Dyz
+    (Dxz) (  S) = Dxz
+    (Dxz) ( Pz) =  Px
+    (Dxz) ( Px) =  Pz
+    (Dxz) (Dxz) =   S
+    (Dxz) ( Py) = xyz
+    (Dxz) (Dyz) = Dxy
+    (Dxz) (Dxy) = Dyz
+    (Dxz) (xyz) =  Py
+    ( Py) (  S) =  Py
+    ( Py) ( Pz) = Dyz
+    ( Py) ( Px) = Dxy
+    ( Py) (Dxz) = xyz
+    ( Py) ( Py) =   S
+    ( Py) (Dyz) =  Pz
+    ( Py) (Dxy) =  Px
+    ( Py) (xyz) = Dxz
+    (Dyz) (  S) = Dyz
+    (Dyz) ( Pz) =  Py
+    (Dyz) ( Px) = xyz
+    (Dyz) (Dxz) = Dxy
+    (Dyz) ( Py) =  Pz
+    (Dyz) (Dyz) =   S
+    (Dyz) (Dxy) = Dxz
+    (Dyz) (xyz) =  Px
+    (Dxy) (  S) = Dxy
+    (Dxy) ( Pz) = xyz
+    (Dxy) ( Px) =  Py
+    (Dxy) (Dxz) = Dyz
+    (Dxy) ( Py) =  Px
+    (Dxy) (Dyz) = Dxz
+    (Dxy) (Dxy) =   S
+    (Dxy) (xyz) =  Pz
+    (xyz) (  S) = xyz
+    (xyz) ( Pz) = Dxy
+    (xyz) ( Px) = Dyz
+    (xyz) (Dxz) =  Py
+    (xyz) ( Py) = Dxz
+    (xyz) (Dyz) =  Px
+    (xyz) (Dxy) =  Pz
+    (xyz) (xyz) =   S
+
+
+
+
+
+
+0NUCLEAR REPULSION ENERGY    0.00000000
+
+
+
+
+0PRIMITIVE AO INTEGRALS NEGLECTED IF EXPONENTIAL FACTOR BELOW 10**(-65)
+ CONTRACTED AO AND SO INTEGRALS NEGLECTED IF VALUE BELOW 10**(-65)
+ SYMMETRY ORBITAL INTEGRALS WRITTEN ON UNIT  3
+1             He ATOMS
+
+0NUCLEAR CHARGE   2.00
+
+0CENTER            X               Y               Z
+   1             0.00000000      0.00000000      0.00000000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS         1.7000000E-05   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  1  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS         4.8000000E-05   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  2  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS         1.3400000E-04   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  3  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS         3.7600000E-04   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  4  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS         1.0560000E-03   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  5  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS         2.9670000E-03   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  6  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS         8.3370000E-03   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  7  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS         2.3428000E-02   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  8  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS         6.5832000E-02   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  9  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS         0.1849870       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 10  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS         0.5198140       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 11  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS          1.460679       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 12  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS          4.104507       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 13  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS          11.53367       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 14  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS          32.40960       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 15  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS          91.07098       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 16  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS          255.9094       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 17  S1
+  1,  1S  1.000
+
+
+          1S ORBITALS
+0ORBITAL EXPONENTS          719.1055       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 18  S1
+  1,  1S  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         5.1000000E-05   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  1 Px1  1 Py1  1 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         1.4200000E-04   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  2 Px1  2 Py1  2 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         3.9800000E-04   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  3 Px1  3 Py1  3 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         1.1150000E-03   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  4 Px1  4 Py1  4 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         3.1230000E-03   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  5 Px1  5 Py1  5 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         8.7440000E-03   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  6 Px1  6 Py1  6 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         2.4482000E-02   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  7 Px1  7 Py1  7 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         6.8551000E-02   0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  8 Px1  8 Py1  8 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         0.1919420       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO  9 Px1  9 Py1  9 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         0.5374390       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 10 Px1 10 Py1 10 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS          1.504828       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 11 Px1 11 Py1 11 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS          4.213517       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 12 Px1 12 Py1 12 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS          11.79785       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 13 Px1 13 Py1 13 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS          33.03398       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 14 Px1 14 Py1 14 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS          92.49514       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 15 Px1 15 Py1 15 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS          258.9864       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 16 Px1 16 Py1 16 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          3D ORBITALS
+0ORBITAL EXPONENTS          2.000000       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 19  S1 20  S1  1Dxy1  1Dxz1  1Dyz1
+  1,  XX -1.000  1.000  0.000  0.000  0.000
+  1,  YY -1.000 -1.000  0.000  0.000  0.000
+  1,  ZZ  2.000  0.000  0.000  0.000  0.000
+  1,  XY  0.000  0.000  1.000  0.000  0.000
+  1,  XZ  0.000  0.000  0.000  1.000  0.000
+  1,  YZ  0.000  0.000  0.000  0.000  1.000
+
+
+          3D ORBITALS
+0ORBITAL EXPONENTS         0.8000000       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 21  S1 22  S1  2Dxy1  2Dxz1  2Dyz1
+  1,  XX -1.000  1.000  0.000  0.000  0.000
+  1,  YY -1.000 -1.000  0.000  0.000  0.000
+  1,  ZZ  2.000  0.000  0.000  0.000  0.000
+  1,  XY  0.000  0.000  1.000  0.000  0.000
+  1,  XZ  0.000  0.000  0.000  1.000  0.000
+  1,  YZ  0.000  0.000  0.000  0.000  1.000
+
+
+          3D ORBITALS
+0ORBITAL EXPONENTS         0.3000000       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 23  S1 24  S1  3Dxy1  3Dxz1  3Dyz1
+  1,  XX -1.000  1.000  0.000  0.000  0.000
+  1,  YY -1.000 -1.000  0.000  0.000  0.000
+  1,  ZZ  2.000  0.000  0.000  0.000  0.000
+  1,  XY  0.000  0.000  1.000  0.000  0.000
+  1,  XZ  0.000  0.000  0.000  1.000  0.000
+  1,  YZ  0.000  0.000  0.000  0.000  1.000
+
+
+          3D ORBITALS
+0ORBITAL EXPONENTS         0.1000000       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 25  S1 26  S1  4Dxy1  4Dxz1  4Dyz1
+  1,  XX -1.000  1.000  0.000  0.000  0.000
+  1,  YY -1.000 -1.000  0.000  0.000  0.000
+  1,  ZZ  2.000  0.000  0.000  0.000  0.000
+  1,  XY  0.000  0.000  1.000  0.000  0.000
+  1,  XZ  0.000  0.000  0.000  1.000  0.000
+  1,  YZ  0.000  0.000  0.000  0.000  1.000
+
+
+          4F ORBITALS
+0ORBITAL EXPONENTS         0.3000000       0.000000    
+ CONTRACTION COEFFICIENTS   1.000000       0.000000    
+
+          SYMMETRY ORBITALS
+ CTR, AO 17 Pz1 17 Px1 17 Py1 18 Pz1  1xyz1 18 Py1 18 Px1
+  1, XXX  0.000 -1.000  0.000  0.000  0.000  0.000 -1.000
+  1, YYY  0.000  0.000 -1.000  0.000  0.000 -1.000  0.000
+  1, ZZZ  2.000  0.000  0.000  0.000  0.000  0.000  0.000
+  1, XXY  0.000  0.000 -1.000  0.000  0.000  3.000  0.000
+  1, XXZ -3.000  0.000  0.000  1.000  0.000  0.000  0.000
+  1, YYX  0.000 -1.000  0.000  0.000  0.000  0.000  3.000
+  1, YYZ -3.000  0.000  0.000 -1.000  0.000  0.000  0.000
+  1, ZZX  0.000  4.000  0.000  0.000  0.000  0.000  0.000
+  1, ZZY  0.000  0.000  4.000  0.000  0.000  0.000  0.000
+  1, XYZ  0.000  0.000  0.000  0.000  1.000  0.000  0.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         3.5062000E-02 -1.1915000E-02  6.3352000E-02 -1.6627000E-02  0.1130890     -2.2121000E-02  0.2062520    
+ -2.8703000E-02  0.3907980     -3.6718000E-02  0.7805190     -4.6722000E-02   1.673984     -5.9743000E-02
+   3.971909     -7.7885000E-02   11.05737     -0.1064570       42.32141     -0.1665750    
+ CONTRACTION COEFFICIENTS -7.5293690E-04  1.9799897E-02  0.1017999      0.1324790      0.3516785      0.1209783      0.3807478    
+ -5.1789862E-02  0.2143085     -0.1115400      8.1585355E-02 -7.0891867E-02  2.4299786E-02 -2.8498921E-02
+  5.9839431E-03 -8.4209732E-03  1.1809882E-03 -1.8449937E-03  1.5799838E-04 -2.6099909E-04
+
+          SYMMETRY ORBITALS
+ CTR, AO 19 Px1 19 Py1 19 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         2.3667000E-02 -2.3016000E-02  4.3397000E-02 -3.1665000E-02  7.7162000E-02 -4.1995000E-02  0.1392470    
+ -5.4703000E-02  0.2610360     -7.0425000E-02  0.5173600     -9.0099000E-02   1.104680     -0.1155630    
+   2.615655     -0.1508250       7.275767     -0.2061530       27.83732     -0.3223880    
+ CONTRACTION COEFFICIENTS  3.8161690E-03  1.9509832E-02  0.2153978     -7.3601656E-02 -0.1465756     -0.6594841     -0.8512055    
+ -0.1150808     -0.4129729      0.4375712     -2.2213096E-02  0.2764984      3.3461666E-02  8.9180072E-02
+  1.4995109E-02  2.0996711E-02  3.7290140E-03  3.8989368E-03  5.5300131E-04  5.0099115E-04
+
+          SYMMETRY ORBITALS
+ CTR, AO 20 Px1 20 Py1 20 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         6.9470000E-03 -1.9274000E-02  1.3328000E-02 -2.5303000E-02  2.3489000E-02 -3.2818000E-02  4.1080000E-02
+ -4.2635000E-02  7.3869000E-02 -5.5655000E-02  0.1404420     -7.2894000E-02  0.2903600     -9.5610000E-02
+  0.6747020     -0.1264480       1.860996     -0.1734880       7.098588     -0.2707770    
+ CONTRACTION COEFFICIENTS -6.8759887E-03  1.6605030E-02  0.1224717     -0.3265253      -1.340448       1.456735       4.743726    
+ -0.6207287      -3.602465      -4.369127      -2.282079       2.758392      0.7909031       1.087456    
+  0.3445843      2.8199106E-02  6.1382332E-02 -2.6100054E-02  7.0139356E-03 -5.2377803E-03
+
+          SYMMETRY ORBITALS
+ CTR, AO 21 Px1 21 Py1 21 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+
+
+          2P ORBITALS
+0ORBITAL EXPONENTS         6.2000000E-04 -8.0770000E-03  1.1880000E-03 -9.4850000E-03  1.9740000E-03 -1.1281000E-02  3.1660000E-03
+ -1.3644000E-02  5.0930000E-03 -1.6875000E-02  8.4290000E-03 -2.1495000E-02  1.4749000E-02 -2.8482000E-02
+  2.8373000E-02 -3.9848000E-02  6.4510000E-02 -6.0343000E-02  0.2088340     -0.1055450    
+ CONTRACTION COEFFICIENTS  8.3816739E-04  3.8154015E-04  6.7174935E-04  9.2357953E-03 -5.2740146E-02  1.2005009E-02 -1.8040940E-02
+ -0.2145671      0.5715986      0.1891317      0.9672987     -0.6511329     -0.4838695       1.409878    
+ -2.4124482E-02  -1.148064     -6.7465597E-04  0.4534928      3.8639581E-02 -5.6865480E-02
+
+          SYMMETRY ORBITALS
+ CTR, AO 22 Px1 22 Py1 22 Pz1
+  1,   X  1.000  0.000  0.000
+  1,   Y  0.000  1.000  0.000
+  1,   Z  0.000  0.000  1.000
+1   CX   6883
+ ICXST    946
+               1141 S INTEGRALS IN 2 BLOCKS
+               1141 T INTEGRALS IN 2 BLOCKS
+               1141 V INTEGRALS IN 2 BLOCKS
+             1973859 INTEGRALS IN  2437 BLOCKS
