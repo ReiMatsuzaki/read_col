@@ -1,0 +1,142 @@
+
+
+ INTEGRALS ARE READ IN FROM   FILE  3 (IFILE).
+
+ INTEGRALS ARE WRITTEN OUT ON FILE  2 (NFILE).
+
+
+ ISFR:          105
+           1      1      1
+           2      1      1
+           3      1      1
+           4      1      1
+           5      1      1
+           6      1      1
+           7      1      1
+           8      1      1
+           9      1      1
+          10      1      1
+          11      1      1
+          12      1      1
+          13      1      1
+          14      1      1
+          15      1      1
+          16      1      1
+          17      1      1
+          18      1      1
+          19      1      4
+          20      1      4
+          21      1      4
+          22      1      4
+          23      1      4
+          24      1      4
+          25      1      4
+          26      1      4
+          27      1      2
+          28      1      2
+          29      1      2
+          30      1      2
+          31      1      2
+          32      1      2
+          33      1      2
+          34      1      2
+          35      1      2
+          36      1      2
+          37      1      2
+          38      1      2
+          39      1      2
+          40      1      2
+          41      1      2
+          42      1      2
+          43      1      6
+          44      1      6
+          45      1      2
+          46      1      2
+          47      1      2
+          48      1      2
+          49      1      2
+          50      1      2
+          51      1      2
+          52      1      2
+          53      1      2
+          54      1      2
+          55      1      2
+          56      1      2
+          57      1      2
+          58      1      2
+          59      1      2
+          60      1      2
+          61      1      2
+          62      1      2
+          63      1      2
+          64      1      2
+          65      1      6
+          66      1      6
+          67      1      2
+          68      1      2
+          69      1      2
+          70      1      2
+          71      1      4
+          72      1      4
+          73      1      4
+          74      1      4
+          75      1      2
+          76      1      2
+          77      1      2
+          78      1      2
+          79      1      2
+          80      1      2
+          81      1      2
+          82      1      2
+          83      1      2
+          84      1      2
+          85      1      2
+          86      1      2
+          87      1      2
+          88      1      2
+          89      1      2
+          90      1      2
+          91      1      6
+          92      1      6
+          93      1      2
+          94      1      2
+          95      1      2
+          96      1      2
+          97      1      4
+          98      1      4
+          99      1      4
+         100      1      4
+         101      1      4
+         102      1      4
+         103      1      4
+         104      1      4
+         105      1      6
+ produced by make_input.rb                                                       
+
+ NUCLEAR REPULSION =     0.000000000000000D+00
+
+
+ NUMBER OF SYMMETRY TYPES IS  8
+
+
+ SYMMETRY TYPE =  1       S  NO. OF S.O. =   26
+ SYMMETRY TYPE =  2      Pz  NO. OF S.O. =   22
+ SYMMETRY TYPE =  3      Px  NO. OF S.O. =   22
+ SYMMETRY TYPE =  4     Dxz  NO. OF S.O. =    4
+ SYMMETRY TYPE =  5      Py  NO. OF S.O. =   22
+ SYMMETRY TYPE =  6     Dyz  NO. OF S.O. =    4
+ SYMMETRY TYPE =  7     Dxy  NO. OF S.O. =    4
+ SYMMETRY TYPE =  8     xyz  NO. OF S.O. =    1
+
+
+
+
+
+       1141  S  INTEGRALS PROCESSED.
+
+       1141  T  INTEGRALS PROCESSED.
+
+       1141  V  INTEGRALS PROCESSED.
+
+
+          553999 P AND K/2 ELEMENTS IN   855 BLOCKS.
