@@ -1,0 +1,10 @@
+*.mod
+read_aoints
+**.out
+**/AOINTS
+**/CSTO.DAT
+**/PHKS
+**/DIPINTS
+
+
+
