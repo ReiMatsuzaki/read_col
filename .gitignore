@@ -1,5 +1,6 @@
 *.mod
-read_aoints
+test_read_aoints
+test_read_intin
 **.out
 **/AOINTS
 **/CSTO.DAT
