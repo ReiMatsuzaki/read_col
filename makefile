@@ -1,6 +1,7 @@
-FC=ifort
-#FC=gfortran
-FFLAG=-traceback -g -check all
+#FC=ifort
+FC=gfortran
+#FFLAG=-traceback -g -check all
+FFLAG=-Wall -fbounds-check -O -Wuninitialized -ffpe-trap=invalid,zero,overflow -fbacktrace -g
 
 %.o: %.f90
 	${FC} ${FFLAG} -c $< -o $@
@@ -19,6 +20,11 @@ test_read_mocoef:  read_mocoef.o read_aoints.o test_read_mocoef.o
 	${FC} ${FFLAG} $^ -o $@
 check_read_mocoef: test_read_mocoef
 	cd test/out && ../../test_read_mocoef
+
+test_read_ci: read_ci.o test_read_ci.o
+	${FC} ${FFLAG} $^ -o $@
+check_read_ci: test_read_ci
+	cd test/out && ../../test_read_ci
 
 check: test_read_aoints
 	cd test/out3 && ../../test_read_aoints
