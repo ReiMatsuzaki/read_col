@@ -1,11 +1,19 @@
 *.mod
 test_read_aoints
 test_read_intin
+test_read_mocoef
 **.out
 **/AOINTS
+**/CIVEC*
+**/CSF*
 **/CSTO.DAT
-**/PHKS
 **/DIPINTS
+**/PHKS
+**/WORK1
+**/MOCOEF
+**/HMAT
+**/MOINTS
+**/fort*
 *.o
 
 

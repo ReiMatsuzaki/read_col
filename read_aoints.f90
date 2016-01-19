@@ -215,9 +215,10 @@ contains
          this % zscale
 
   end subroutine AoInts_read_header
-  subroutine AoInts_new_read(this, ifile)
+  subroutine AoInts_new_read(this)
     type(AoInts)        :: this
-    integer, intent(in) :: ifile
+    integer, parameter :: ifile = 3
+    open(unit=ifile, file='AOINTS', status='old', form='unformatted')
 
     call AoInts_read_header(this, ifile)
     call SymMat_new_read(this % s_mat, ifile)
@@ -232,6 +233,8 @@ contains
     call SymMat_set_read(this % t_mat, ifile)
     call SymMat_set_read(this % v_mat, ifile)
     call SymERI_set_read(this % eri, ifile)
+
+    close(unit = ifile)
     
   end subroutine AoInts_new_read
   subroutine AoInts_delete(this)
