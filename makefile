@@ -2,12 +2,14 @@
 FC=gfortran
 #FFLAG=-traceback -g -check all
 FFLAG=-Wall -fbounds-check -O -Wuninitialized -ffpe-trap=invalid,zero,overflow -fbacktrace -g
+MODS=-I${HOME}/local/mod
+LIBLAPACK= -lblas -llapack -llapack95
 
 %.o: %.f90
-	${FC} ${FFLAG} -c $< -o $@
+	${FC} ${FFLAG} ${MODS} -c $< -o $@
 
 test_read_aoints:  utest.o read_aoints.o test_read_aoints.o
-	${FC} ${FFLAG} $^ -o $@
+	${FC} ${FFLAG} $^ ${LIBLAPACK} -o $@
 check_read_aoints: test_read_aoints
 	cd test/out3 && ../../$< 
 

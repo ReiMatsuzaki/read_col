@@ -1,46 +1,32 @@
-module Mod_SymMat
-  type SymMat
-     integer  num
-     complex*16, allocatable :: val(:, :)
-  end type SymMat
-contains
-  subroutine SymMat_new(this, num)
-    type(SymMat) this
-    integer num
-    integer i, j
-    this % num = num
-    allocate(this % val(num, num))
-    do i = 1, num
-       do j = 1, num
-          this % val(i, j) = 0.0d0
-       end do
-    end do
-  end subroutine SymMat_new
-  subroutine SymMat_delete(this)
-    type(SymMat) this
-    deallocate(this % val)
-  end subroutine SymMat_delete
-  subroutine SymMat_set(this, i, j, val)
-    type(SymMat) this
-    integer i, j
-    complex*16 val
-    this % val(i, j) = val
-    this % val(j, i) = val
-  end subroutine SymMat_set
-  subroutine SymMat_show(this)
-    type(SymMat) this
-    integer i,j,num
-    num = this % num
-    write(*, *) num
-    do i = 1, num
-       write(*, *) (this % val(i, j), j =1, num)
-    end do
-  end subroutine SymMat_show
-end module Mod_SymMat
 
-
+!! Mod_SymBlockMat
+! read from AOINTS file and store store symmetry distinct block matrix
+!
+! Variables
+! ----------
+! val           : [complex] : store matrix values
+! offset_iblock : [integer] : offset_iblock(i) gives offset in val array for 
+!                             ith block
+! isym_iblock   : [integer] : isym_iblock(i) gives symmetry index for bra function
+!                             for ith block
+! jsym_iblock   : [integer] : jsym_iblock(i) gives symmetry index for ket function
+!                             for ith block
+! iblock_ijsym : [integer, integer] : iblock_ijsym(i, j) gives block index of
+!                                     ith symmetry and jth symmetry if exist and
+!                                     gives 0 if not exist
+!
+! Subroutines
+! ------------
+! new : constructor
+! delete : destructor
+! index : compute index in val array
+! set : set matrix element value (Warning: given index is not checked)
+! get : get matrix element value (Warning: given index is not checked)
+! get_block_size : get given symmetry block size if exist
+! new_read : read AOINTS and allocate memories
+! set_read : read AOINTS and set values
+! show : shows internal datas
 module Mod_SymBlockMat
-  use Mod_SymMat
   implicit none
   type SymBlockMat
      complex*16, allocatable :: val(:)
@@ -393,10 +379,9 @@ contains
          this % zscale
 
   end subroutine AoInts_read_header
-  subroutine AoInts_new_read(this)
+  subroutine AoInts_new_read(this, ifile)
     type(AoInts)        :: this
-    integer, parameter :: ifile = 3
-    open(unit=ifile, file='AOINTS', status='old', form='unformatted')
+    integer, intent(in) :: ifile
 
     call AoInts_read_header(this, ifile)
     call SymBlockMat_new_read(this % s_mat, ifile)

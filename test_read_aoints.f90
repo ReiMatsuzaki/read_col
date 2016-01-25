@@ -1,10 +1,11 @@
 program main
-  use Mod_SymBlockMat
-  !  use Mod_SymMat
-  use Mod_UnitTest
+  use Mod_AoInts
+  use Mod_UnitTest  
   implicit none
 
-  call test_SymBlockMat()
+  !  call test_SymBlockMat()
+  !  call test_AoInts()
+  call test_diagonalization()
   
 contains
   subroutine test_SymBlockMat()
@@ -61,64 +62,47 @@ contains
     
     call SymBlockMat_delete(mat)
   end subroutine test_SymBlockMat
+  subroutine test_AoInts()
+    type(AoInts) :: ao_ints
+    integer, parameter :: ifile = 13
+    open(unit=ifile, file='AOINTS', status='old', form='unformatted')
+    call AoInts_new_read(ao_ints, ifile)
+    call AoInts_show(ao_ints)
+    call AoInts_delete(ao_ints)
+    close(ifile)
+  end subroutine test_AoInts
+  subroutine test_diagonalization()
+    use f95_lapack, only : LA_GEES
+    integer,parameter :: n=3
+    integer i, j
+    complex*16 :: A(n,n), AA(n, n)
+    complex*16:: w(n), vs(n, n), tmp(n)
+    complex*16 :: x = (0.0d0, 0.0d0)
+    A(1, 1) = (1.0d0, 0.0d0)
+    A(1, 2) = (2.0d0, 0.0d0)
+    A(2, 1) = (2.0d0, 0.0d0)
+    A(2 ,2) = (1.0d0, 0.0d0)
+    A(3, 3) = (1.1d0, 0.0d0)
+    AA(:, :) = A(:, :)
 
-!  subroutine test_symmat()
-!    type(SymMat) m1
-!    real*8 eps
-!    eps = 10.0**(-10.0)
-!    
-!    call SymMat_new(m1, 3)
-!    
-!    call SymMat_set(m1, 1, 1, (1.2d0, 0.0d0))
-!    call SymMat_set(m1, 1, 2, (1.1d0, 0.0d0))
-!    call SymMat_set(m1, 1, 3, (1.3d0, 0.0d0))
-!    
-!    call CNear("m1(1,2)", m1 % val(1, 3), (1.3d0, 0.0d0), eps)
-!    call CNear("m1(2,1)", m1 % val(1, 2), m1 % val(2, 1), eps)
-!      
-!    call SymMat_delete(m1)
-!  end subroutine test_symmat
-!  subroutine test_sym_block_mat()
-!    type(SymBlockMat) bmat
-!    type(SymMat), pointer ::  mat1, mat2
-!    logical non_zero
-!
-!    ! Initialize 
-!    call SymBlockMat_new_diag(bmat, [2, 3, 4])
-!
-!    ! Check off diagonal is empty
-!    call SymBlockMat_get_mat(bmat, 1, 2, mat1, non_zero)
-!    call BFalse("(1,2) is empty ", non_zero)
-!
-!    ! Set (1, 1) block matrix
-!    write(*, *) "A"
-!    call SymBlockMat_get_mat(bmat, 1, 1, mat1, non_zero)
-!    write(*, *) "B"
-!    call BTrue("(1,1) is not empty ", non_zero)
-!    call SymMat_set(mat1, 1, 1, (1.0d0, 1.1d0))
-!    call SymMat_set(mat1, 1, 2, (1.0d0, 1.2d0))
-!    call SymMat_set(mat1, 2, 2, (1.1d0, 1.2d0))
-!
-!    ! Set (2, 2) block matrix
-!    call SymBlockMat_get_mat(bmat, 2, 2, mat1, non_zero)
-!    call SymMat_set(mat1, 1, 1, (2.0d0, 1.0d0))
-!    call SymMat_set(mat1, 1, 2, (2.0d0, 1.1d0))
-!
-!    ! Check (1, 1) block matrix
-!    call SymBlockMat_get_mat(bmat, 1, 1, mat2, non_zero)
-!    call CEq("bmat(1)(1,1)", (1.0d0, 1.1d0), mat2 % val(1, 1))
-!    call CEq("bmat(1)(2,1)", (1.0d0, 1.2d0), mat2 % val(2, 1))
-!
-!    ! Check (2, 2) block matrix
-!    call SymBlockMat_get_mat(bmat, 2, 2, mat2, non_zero)
-!    call CEq("bmat(2,2)(1,1)", (2.0d0, 1.0d0)+0.1d0, mat2 % val(1, 1))
-!    call CEq("bmat(2,2)(2,1)", (2.0d0, 1.1d0), mat2 % val(2, 1))
-!
-!    ! Show
-!    call SymBlockMat_show(bmat)
-!
-!    ! Finalize
-!    call SymBlockMat_delete(bmat)
-!  end subroutine test_sym_block_mat
+    call LA_GEES(AA, w, vs)
+    write(*, *) "w"
+    do i = 1, n
+       write(*, *) i, w(i)
+    end do
+    write(*, *) "vs"
+    do i = 1, n
+       write(*, *) (real(vs(i, j)), j = 1, n)
+    end do
+
+    tmp(:) = vs(:, 1)
+    do i = 1, n
+       x = (0.0d0, 0.0d0)
+       do j = 1, n
+          x = x + A(i, j) * tmp(j)
+       end do
+    write(*, *) i, real(x), real(tmp(i) * w(1))
+ end do
+  end subroutine test_diagonalization
 end program main
 
