@@ -1,3 +1,96 @@
+module Mod_SymVec
+  implicit none
+  type SymVec
+     integer :: nst
+     integer, allocatable    :: offset_ist(:)
+     integer, allocatable    :: num_ist(:)
+     complex*16, allocatable :: val(:)
+  end type SymVec
+contains
+  subroutine SymVec_new(this, num_ist)
+    type(SymVec), intent(out) :: this
+    integer, intent(in)       :: num_ist(:)
+
+    integer ist ! index for symmetry
+    integer nst ! number of symmetry
+    
+    nst = size(num_ist)
+    this % nst = nst
+    allocate(this % offset_ist(nst))
+    allocate(this % num_ist(nst))
+    allocate(this % val(sum(num_ist)))
+    
+    this % offset_ist(1) = 0
+    do ist = 2, nst
+       this % offset_ist(ist) = &
+            this % offset_ist(ist-1) + num_ist(ist-1)
+    end do
+    this % num_ist(:) = num_ist(:)
+    
+  end subroutine SymVec_new
+  subroutine SymVec_index(this, ist, i, res)
+    type(SymVec), intent(in) :: this
+    integer, intent(in)      :: ist, i
+    integer, intent(out)     :: res
+    res = this % offset_ist(ist) + i
+  end subroutine SymVec_index
+  subroutine SymVec_set(this, ist, i, v)
+    type(SymVec), intent(inout) :: this
+    integer, intent(in)         :: ist, i
+    complex*16, intent(in)      :: v
+    integer :: idx
+    call SymVec_index(this, ist, i, idx)
+    this % val(idx) = v
+  end subroutine SymVec_set
+  subroutine SymVec_get(this, ist, i, v)
+    type(SymVec), intent(in) :: this
+    integer, intent(in)         :: ist, i
+    complex*16, intent(out)      :: v
+    integer :: idx
+    call SymVec_index(this, ist, i, idx)
+    v = this % val(idx)
+  end subroutine SymVec_get
+  subroutine SymVec_show(this)
+    type(SymVec), intent(in) :: this
+    integer    :: ist, i
+    complex*16 :: v
+    do ist = 1, this % nst
+       do i = 1, this % num_ist(ist)
+          call SymVec_get(this, ist, i, v)
+          write(*, *) ist, v
+       end do
+    end do
+  end subroutine SymVec_show
+  subroutine SymVec_write(this, ifile)
+    type(SymVec), intent(in) :: this
+    integer, intent(in)      :: ifile
+    integer :: nst, ist, i
+    nst = this % nst
+    write(ifile, *) this % nst
+    write(ifile, *) (this % num_ist(ist), ist = 1, nst)
+    do i = 1, size(this % val)
+       write(ifile, *) this % val(i)
+    end do
+    
+  end subroutine SymVec_write
+  subroutine SymVec_new_read(this, ifile)
+    type(SymVec), intent(out) :: this
+    integer, intent(in)      :: ifile
+    integer :: nst, ist, i
+    integer, allocatable :: num_ist(:)
+    
+    read(ifile, *) nst
+    allocate(num_ist(nst))
+    read(ifile, *) (num_ist(ist), ist = 1, nst)
+    call SymVec_new(this, num_ist)
+
+    do i = 1, size(this % val)
+       read(ifile, *) this % val(i)
+    end do
+    
+  end subroutine SymVec_new_read
+end module Mod_SymVec
+
 module Mod_IntIn
   implicit none
   integer :: nx(5,10)
@@ -370,6 +463,8 @@ contains
     end do
     
   end subroutine IntIn_show_basis_symmetry
+  subroutine IntIn_project_sh_gto()
+  end subroutine IntIn_project_sh_gto
 !    subroutine project_SH_GTO(eta, zeta, nx, ny, nz, L, M, r, res)
 !    complex*16, intent(in) :: eta, zeta
 !    integer, intent(in)    :: nx, ny, nz, L, M

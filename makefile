@@ -13,7 +13,7 @@ test_read_aoints:  utest.o read_aoints.o test_read_aoints.o
 check_read_aoints: test_read_aoints
 	cd test/out3 && ../../$< 
 
-test_read_intin: read_intin.o test_read_intin.o
+test_read_intin: utest.o read_intin.o test_read_intin.o
 	${FC} ${FFLAG} $^ -o $@
 check_read_intin: test_read_intin
 	cd test/out3 && ../../test_read_intin < int.in 
