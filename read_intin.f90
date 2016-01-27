@@ -34,11 +34,17 @@ module Mod_IntIn
      integer maords(10)      ! maords(IGCS) : IAORDS
      integer nct(10)         ! nct(IGCS) : # of GTOs
      integer ncs(10)         ! ncs(ICS)  : # of symmetry (almost same as nr)
+     integer igc2(10, 10, 10)
      real*8  igc(10, 10, 10) ! igc(ICT, ICS, IGCS) : square coefficient
      !                       ! ICT<-nct(IGCS) : index of GTO
      !        (ex(f). 1=>XXX,2=>YYY,3=>ZZZ,4=>XXY,5=>XXZ,6=>YYZ,... )
      !                       ! ICS<-ncs(IGCS) : index of symmetry
      !                       ! IGCS : index of GTO Reduction Sets
+     integer :: gto_l_isf_ics(108, 10) ! L in real Spherical Harmonics
+     integer :: gto_m_isf_ics(108, 10) ! M in real Spherical Harmonics
+     real*8 ::  gto_c_isf_ics(108, 10) ! coefficient of real Spherical Harmonics
+     !                         ! GTO in real Spherical Harmonics form becomes
+     !                              eta r^n exp(-zeta r^2) c Y_LM
 
      ! ==== GTOs ====
      integer lmnp1(108)      ! (lmnp1(ICONS), ICONS<-NCONS) : L+1
@@ -107,7 +113,7 @@ contains
 !    integer ifile
 
     integer ist, idpt, jst, kst, iaords, iru, ir, igcs, icsu, ictu, ics, ict, icons, iconu, icon, isf, is, ic, ig, ng, if, ndpt
-    integer igc2(10), it
+    integer it
     call IntIn_init()
     
     !    read(*, "(1H1, 8A10)") this % blabel
@@ -117,6 +123,7 @@ contains
 
     read(*, '(I3, 12(I3,A3))') this % nst, (this % nd(ist), this % ityp(ist), ist=1, this % nst)
 
+    ! ==== Group product table====
     read(*, *) ndpt
     do idpt = 1, ndpt
        read(*, *) ist, jst, kst
@@ -129,20 +136,21 @@ contains
        this % idp(kst, jst, ist) = 1
     end do
 
+    ! ==== AO ReDuction Sets ====
     do iaords = 1, this % naords
        read(*, '(10I3)') iru, (this % la(ir, iaords), ir = 1, iru)
        this % nr(iaords) = iru
     end do
-
+    
+    ! ==== GTO contractions ====
     do igcs = 1, this % ngcs
        read(*, '(10I3)') icsu, ictu, this % maords(igcs)
        this % nct(igcs) = ictu         ! nct(IGCS) : # of GTOs
        this % ncs(igcs) = icsu         ! ncs(ICS)  : # of symmetry
        do ics = 1, icsu
-          read(*, '(10I3)') (igc2(ict), ict=1, ictu)
+          read(*, '(10I3)') (this % igc2(ict, ics, igcs), ict=1, ictu)
           do ict = 1, ictu
-!             write(*, '(10I3)') igcs, ics, ict, igc2(ict)
-             it = igc2(ict)
+             it = this % igc2(ict, ics, igcs)
              if(it .eq. 0) then
                 this % igc(ict, ics, igcs) = 0.0d0
              else
@@ -152,12 +160,16 @@ contains
        end do
     end do
 
+    ! ==== GTO ====
+    write(*, *) "reading GTOs"
     do icons = 1, this % ncons
        read(*, '(2I3,A4)') iconu, this % lmnp1(icons), this %istar(icons)
        read(*, '(4D14.8)') (this % zet(icon, icons), this % eta(icon, icons), icon = 1, iconu)
        this % ncon(icons) = iconu
     end do
 
+    ! ==== Atoms ====
+    write(*, *) "reading atoms"
     isf = 0
     do is = 1, this % ns
        read(*, *) this % mtype(is), this % nf(is), this % nc(is), this % chg(is)
@@ -173,63 +185,98 @@ contains
           read(*, *) this % mcons(isf), this % mgcs(isf)
        end do
     end do
-    
+
+    ! ==== Find real Spherical Harmonics ====
+    write(*, *) "Find real spherical "
+    isf = 0
+    do is = 1, this % ns
+       do if = 1, this % nf(is)
+          isf = isf + 1
+          icons = this % mcons(isf)
+          igcs  = this % mgcs(isf)
+          do ics = 1, this % ncs(igcs)
+             call IntIn_find_harmonics( &
+                  this % igc2(:, ics, igcs), &
+                  this % lmnp1(this % mcons(isf)), &
+                  this % gto_l_isf_ics(isf, ics), &
+                  this % gto_m_isf_ics(isf, ics), &
+                  this % gto_c_isf_ics(isf, ics))
+          end do
+       end do
+    end do
   end subroutine IntIn_new_read
-  subroutine _IntIn_find_harmonics(igc2, lmp1, L, M, n)
+  subroutine IntIn_find_harmonics(igc2, lmp1, L, M, c)
+
+    ! x^n1 y^n2 z^n3 = coef r^n Y_LM
+    
     integer, intent(in) :: igc2(:)
     integer, intent(in) :: lmp1
-    integer, intent(out) :: L, M, n
-    integer :: num, i
+    integer, intent(out) :: L, M
+    real*8, intent(out)  :: c
+    integer :: num
+    real*8, parameter :: pi = 4.0d0 * atan(1.0d0)
+    
     
     num = size(igc2)
 
     if (lmp1 .eq. 1) then
-       if(igc2(1:1) .eq. (/1/)) then
-          L = 0; M = 0; n = 0
-          return 
+       if(all(igc2(1:1) .eq. (/1/))) then
+          L = 0; M = 0; c = sqrt(4.0d0 * pi); return
        end if
        
     else if(lmp1 .eq. 2) then
-       if(igc2(1:3) .eq. (/1, 0, 0/))  then
-          L = 1; M = 1; n = 1
+       if(all(igc2(1:3) .eq. (/1, 0, 0/)))  then
+          L = 1; M = 1; c = sqrt(4.0d0*pi/3.0d0); return
           return
-       else if(igc2(1:3) .eq. (/0, 1, 0/)) then
-          L = 1; M =-1; n = 1
+       else if(all(igc2(1:3) .eq. (/0, 1, 0/))) then
+          L = 1; M =-1; c = sqrt(4.0d0*pi/3.0d0); return
           return
-       else if(igc2(1:3) .eq. (/0, 0, 1/)) then
-          L = 1; M = 0; n = 1
-          return           
+       else if(all(igc2(1:3) .eq. (/0, 0, 1/))) then
+          L = 1; M = 0; c = sqrt(4.0d0*pi/3.0d0); return 
        end if
 
        ! D orbital
        ! (XX, YY, ZZ, XY, XZ, YZ)
     else if(lmp1 .eq. 3) then
-       if(igc2(1:6) .eq. (/-1, -1, 4, 0, 0, 0/)) then
-          L = 2; M = 0; n = 2; return 
-       else if(igc2(1:6) .eq. (/1, -1, 0, 0, 0, 0/)) then
-          L = 2; M = 2; n = 2; return
-       else if(igc2(1:6) .eq. (/1, 1, 1, 0, 0, 0/)) then
-          L = 0; M = 0; n = 2; return
-       else if(igc2(1:6) .eq. (/0, 0, 0, 1, 0, 0/)) then
-          L = 2; M = -2; n = 2; return 
-       else if(igc2(1:6) .eq. (/0, 0, 0, 0, 1, 0/)) then          
-          L = 2; M = +1; n = 2; return 
-       else if(igc2(1:6) .eq. (/0, 0, 0, 0, 0, 1/)) then
-          L = 2; M = -1; n = 2; return 
+       if(all(igc2(1:6) .eq. (/-1, -1, 4, 0, 0, 0/))) then
+          L = 2; M = 0; c = sqrt(16.0d0*pi/5.0d0); return 
+       else if(all(igc2(1:6) .eq. (/1, -1, 0, 0, 0, 0/))) then
+          L = 2; M = 2; c = sqrt(16.0d0*pi/15.0d0); return
+       else if(all(igc2(1:6) .eq. (/1, 1, 1, 0, 0, 0/))) then
+          L = 0; M = 0; c = sqrt(4.0d0*pi); return
+       else if(all(igc2(1:6) .eq. (/0, 0, 0, 1, 0, 0/))) then
+          L = 2; M = -2; c = sqrt(4.0d0*pi/15.0d0); return 
+       else if(all(igc2(1:6) .eq. (/0, 0, 0, 0, 1, 0/))) then          
+          L = 2; M = +1; c = sqrt(4.0d0*pi/15.0d0); return 
+       else if(all(igc2(1:6) .eq. (/0, 0, 0, 0, 0, 1/))) then
+          L = 2; M = -1; c = sqrt(4.0d0*pi/15.0d0); return 
        end if
 
        ! F orbital
-       ! 
+       !                      ! (XXX,YYY,ZZZ,XXY,XXZ,YYX,YYZ,ZZX,ZZY,XYZ)
     else if(lmp1 .eq. 4) then
+       ! 2z^3 -3xxz -3yyz = 5zzz - 3rrz
+       if(all(igc2 .eq.      (/ 0,  0,  4,  0, -9,  0, -9,  0,  0,  0/))) then
+          L = 3; M = 0; c = sqrt(16.0d0*pi/7.0d0); return 
+       else if(all(igc2(1:10) .eq. (/-1,  0,  0,  0,  0, -1,  0, 16,  0,  0/))) then
+          L = 3; M = 1; c = -sqrt(128.0d0*pi/21.0d0); return 
+       else if(all(igc2(1:10) .eq. (/ 0, -1,  0, -1,  0,  0,  0,  0, 16,  0/))) then
+          L = 3; M =-1; c = -sqrt(32.0d0*pi/21.0d0); return 
+       else if(all(igc2(1:10) .eq. (/ 0,  0,  0,  0,  1,  0, -1,  0,  0,  0/))) then
+          L = 3; M = 2; c = +sqrt(16.0d0*pi/105.0d0); return 
+       else if(all(igc2(1:10) .eq. (/ 0,  0,  0,  0,  0,  0,  0,  0,  0,  1/))) then
+          L = 2; M = -2; c = -sqrt(16.0d0*pi/105.0d0); return 
+       else if(all(igc2(1:10) .eq. (/ 0, -1,  0,  9,  0,  0,  0,  0,  0,  0/))) then
+          L = 2; M = -3; c = -sqrt(32.0d0*pi/105.0d0); return 
+       else if(all(igc2(1:10) .eq. (/-1,  0,  0,  0,  0,  9,  0,  0,  0,  0/))) then
+          L = 2; M = +3; c = +sqrt(32.0d0*pi/105.0d0); return 
+       end if
     end if
 
-    write(*, *) "Failed to find harmonics :", igc2
+    write(*, *) "Failed to find harmonics :"
+    write(*, *) "L+1", lmp1
+    write(*, *) "igc2", igc2
     stop
-    
-    do i = 1, num
-       
-    end do
-    
   end subroutine IntIn_find_harmonics
   subroutine IntIn_show(this)
     type(IntIn) this
@@ -272,131 +319,125 @@ contains
        end do
     end do
   end subroutine IntIn_show
-  subroutine project_SH_GTO(eta, zeta, nx, ny, nz, L, M, r, res)
-    complex*16, intent(in) :: eta, zeta
-    integer, intent(in)    :: nx, ny, nz, L, M
-    real*8, intent(in)     :: r
-    complex*16, intent(out) :: res
-    complex*16 :: rad
-    integer :: n
-    real*8 :: pi = atan(1.0d0)*4.0d0
-    integer, parameter :: index_upper = 10
-    integer, parameter :: nu = 3
-    integer, parameter :: lu = 3
-    complex * 16 :: val(index_upper)
-    integer :: index(0:nu, 0:nu, 0:nu,  0:lu, -lu:lu)
-    integer :: ix, iy, iz, l, m, idx
-    complex*16, parameter :: ii = (0.0d0, 1.0d0)
-
-    n = nx + ny + nz
-    rad = eta * (r ** n)* exp(-zeta * r * r)
-    index(:, :, :, :, :) = 0
-    val(:) = (0.0d0, 0.0d0)
-    idx = 0
-
-    ! S
-    idx = idx + 1; index(0, 0, 0, 0, 0) = idx
-    val(idx) = rad * sqrt(4.0d0 * pi)
-
-    ! Px
-    idx = idx + 1; index(1, 0, 0, 1, 1) = idx
-    val(idx) = -rad * sqrt(4.0d0 * pi / 3.0d0) / sqrt(2.0d0)
-    idx = idx + 1; index(1, 0, 0, 1, -1) = idx
-    val(idx) = +rad * sqrt(4.0d0 * pi / 3.0d0) / sqrt(2.0d0)
-    ! Py
-    idx = idx + 1; index(0, 1, 0, 1, 1) = idx
-    val(idx) = -rad * sqrt(4.0d0 * pi / 3.0d0) / (sqrt(2.0d0) * ii)
-    idx = idx + 1; index(0, 1, 0, 1,-1) = idx
-    val(idx) = -rad * sqrt(4.0d0 * pi / 3.0d0) / (sqrt(2.0d0) * ii)
-    ! Pz
-    idx = idx + 1; index(0, 1, 0, 1, 0) = idx
-    val(idx) = rad * sqrt(4.0d0 * pi / 3.0d0)
-
-    ! D x2
-    idx = idx + 1; index(2, 0, 0, 2, 0) = idx
-    val(idx) = -0.5d0 * sqrt(16.0d0 * pi / 5.0d0) / 3.0d0 * rad
-    idx = idx + 1; index(2, 0, 0, 0, 0) = idx
-    val(idx) = +0.5d0 * 2.0d0 / 3.0d0 * sqrt(16.0d0 * pi / 5.0d0) * rad
-    idx = idx + 1; index(2, 0, 0, 2, 2) = idx
-    val(idx) = +0.5d0 * 1.0d0/sqrt(2.0d0) * sqrt(16.0d0 * pi / 15.0d0) * rad
-    idx = idx + 1; index(2, 0, 0, 2,-2) = idx
-    val(idx) = +0.5d0 * 1.0d0/sqrt(2.0d0) * sqrt(16.0d0 * pi / 15.0d0) * rad        
-    ! D y2
-    idx = idx + 1; index(0, 2, 0, 2, 0) = idx
-    val(idx) = -0.5d0 * sqrt(16.0d0 * pi / 5.0d0) / 3.0d0 * rad
-    idx = idx + 1; index(0, 2, 0, 0, 0) = idx
-    val(idx) = +0.5d0 * 2.0d0 / 3.0d0 * sqrt(16.0d0 * pi / 5.0d0) * rad
-    idx = idx + 1; index(0, 2, 0, 2, 2) = idx
-    val(idx) = -0.5d0 * 1.0d0/sqrt(2.0d0) * sqrt(16.0d0 * pi / 15.0d0) * rad
-    idx = idx + 1; index(2, 0, 0, 2,-2) = idx
-    val(idx) = -0.5d0 * 1.0d0/sqrt(2.0d0) * sqrt(16.0d0 * pi / 15.0d0) * rad    
-    ! D z2
-    idx = idx + 1; index(0, 0, 2, 2, 0) = idx
-    val(idx) = rad * sqrt(16.0d0 * pi / 5.0d0) / 3.0d0
-    idx = idx + 1; index(0, 0, 2, 0, 0) = idx
-    val(idx) = rad * sqrt(16.0d0 * pi / 4.0d0) / 3.0d0
-    ! Dxy
-    idx = idx + 1; index(1, 1, 0, 2, 2) = idx
-    val(idx) = +rad * sqrt(4.0d0 * pi / 15.0d0) / (sqrt(2.0d0) * ii)
-    idx = idx + 1; index(1, 1, 0, 2,-2) = idx
-    val(idx) = -rad * sqrt(4.0d0 * pi / 15.0d0) / (sqrt(2.0d0) * ii)
+  subroutine IntIn_show_basis_symmetry(this)
+    type(IntIn) this
+    integer is, ic, isf, icon, if, igto, igcs, ics, ict, ir, idx_gto
+    integer iaords, ist
+    integer lmp1
     
-    ! n = 1
-    if(n .eq. 1) then
-       if(L .ne. 1) then
-          res = (0.0d0, 0.0d0)
-          return
-       else
-          if(nx .eq. 1 .and. abs(M) .eq. 1) then
-             res = - M * rad * sqrt(4.0d0 * pi / 3.0) * sqrt(1.0d0/2.0d0)
-          else if(ny .eq. 1 .and. abs(M) .eq. 1) then
-             res = - rad * sqrt(4.0d0 * pi / 3.0) * sqrt(1.0d0/2.0d0) / (0.0d0, 1.0d0)
-          else if(nz .eq. 1 .and. M .eq. 0) then
-             res = rad * sqrt(4.0d0 * pi / 3.0d0)
-          else
-             return             
-          end if
-       end if
-    end if
-
-    ! n = 2
-    if(n .eq. 2) then
-       if(  nx .eq. 1 .and. ny .eq. 1 .and. L .eq. 2) then
-          if(M .eq. 1) then
-             res = rad * sqrt(4.0d0*pi/15.0d0) / (sqrt(2.0d0) * (0.0d0, 1.0d0))
-          else if(M .eq. -1) then
-             res = -rad * sqrt(4.0d0*pi/15.0d0) / (sqrt(2.0d0) * (0.0d0, 1.0d0))
-          end if
-       else if( ny .eq. 1 .and. nz .eq. 1 .and. L .eq. 2) then
-          if(M .eq. 1 .or. M .eq. -1) then
-             res = -rad * sqrt(4.0d0*pi/15.0d0) / (sqrt(2.0d0) * (0.0d0, 1.0d0))
-          else 
-             return 
-          end if          
-       else if( nz .eq. 1 .and. nx .eq. 1 .and. L .eq. 2) then
-          if(M .eq. 1) then
-             res = -rad * sqrt(4.0d0*pi/15.0d0) / sqrt(2.0d0)
-             return 
-          else if(M .eq. -1) then
-             res = +rad * sqrt(4.0d0*pi/15.0d0) / sqrt(2.0d0)
-             return 
-          end if          
-       end if
-
-    end if
+    isf = 0
+    !  is : symmetry distinct atom set
+    do is = 1, this % ns
+       !  if : functions
+       do if = 1, this % nf(is)
+          isf = isf + 1
+          lmp1 = this % lmnp1(isf)
+          igto = this % mcons(isf)   ! index of GTO
+          igcs = this % mgcs(isf)    ! index of GCS
+          
+          iaords= this % maords(igcs)
+          !  ir,ics : symmetry index
+          do ir = 1, this % nr(iaords)  
+             ics = ir
+             ist = this % la(ir, iaords)
+             write(*, '(I2, "  ")', advance='no') igto
+             write(*, '(A4)', advance='no') this % ityp(ist) 
+             write(*, '("Y(", I2, I2, F8.5, ")" )', advance='no') &
+                  this % gto_l_isf_ics(isf, ics), &
+                  this % gto_m_isf_ics(isf, ics), &
+                  this % gto_c_isf_ics(isf, ics)
+             
+             ict = 0
+             do ic = 1, this % nc(is)
+                do idx_gto = 1, num_gto(lmp1)
+                   ict = ict + 1
+                   if(abs(this % igc(ict, ics, igcs)) > 0.001) then
+                      write(*, '(f5.1)', advance='no') this % igc(ict, ics, igcs)
+                      write(*, '("[",3I1,"]@",I1,A3)', advance='no') &
+                           nx(lmp1, idx_gto), ny(lmp1, idx_gto), nz(lmp1, idx_gto), &
+                           ic, this % mtype(is)
+                   end if
+                end do
+                
+                do icon = 1, this % ncon(isf)
+                end do
+                
+             end do
+             write(*, *) ""
+             
+          end do
+       end do
+    end do
     
-    if(L .eq. 0 .and. M .eq. 0) then
-       if(nx .eq. 0 .and. ny .eq. 0 .and. nz .eq. 0) then
-
-       else
-          res = (0.0d0, 0.0d0)
-          return
-       end if
-    end if
-
-    ! P
+  end subroutine IntIn_show_basis_symmetry
+!    subroutine project_SH_GTO(eta, zeta, nx, ny, nz, L, M, r, res)
+!    complex*16, intent(in) :: eta, zeta
+!    integer, intent(in)    :: nx, ny, nz, L, M
+!    real*8, intent(in)     :: r
+!    complex*16, intent(out) :: res
+!    complex*16 :: rad
+!    integer :: n
+!    real*8 :: pi = atan(1.0d0)*4.0d0
+!    integer, parameter :: index_upper = 10
+!    integer, parameter :: nu = 3
+!    integer, parameter :: lu = 3
+!    complex * 16 :: val(index_upper)
+!    integer :: index(0:nu, 0:nu, 0:nu,  0:lu, -lu:lu)
+!    integer :: ix, iy, iz, idx
+!    complex*16, parameter :: ii = (0.0d0, 1.0d0)
+!
+!    n = nx + ny + nz
+!    rad = eta * (r ** n)* exp(-zeta * r * r)
+!    index(:, :, :, :, :) = 0
+!    val(:) = (0.0d0, 0.0d0)
+!    idx = 0
+!
+!    ! S
+!    idx = idx + 1; index(0, 0, 0, 0, 0) = idx
+!    val(idx) = rad * sqrt(4.0d0 * pi)
+!
+!    ! Px
+!    idx = idx + 1; index(1, 0, 0, 1, 1) = idx
+!    val(idx) = -rad * sqrt(4.0d0 * pi / 3.0d0) / sqrt(2.0d0)
+!    idx = idx + 1; index(1, 0, 0, 1, -1) = idx
+!    val(idx) = +rad * sqrt(4.0d0 * pi / 3.0d0) / sqrt(2.0d0)
+!    ! Py
+!    idx = idx + 1; index(0, 1, 0, 1, 1) = idx
+!    val(idx) = -rad * sqrt(4.0d0 * pi / 3.0d0) / (sqrt(2.0d0) * ii)
+!    idx = idx + 1; index(0, 1, 0, 1,-1) = idx
+!    val(idx) = -rad * sqrt(4.0d0 * pi / 3.0d0) / (sqrt(2.0d0) * ii)
+!    ! Pz
+!    idx = idx + 1; index(0, 1, 0, 1, 0) = idx
+!    val(idx) = rad * sqrt(4.0d0 * pi / 3.0d0)
+!
+!    ! D x2
+!    idx = idx + 1; index(2, 0, 0, 2, 0) = idx
+!    val(idx) = -0.5d0 * sqrt(16.0d0 * pi / 5.0d0) / 3.0d0 * rad
+!    idx = idx + 1; index(2, 0, 0, 0, 0) = idx
+!    val(idx) = +0.5d0 * 2.0d0 / 3.0d0 * sqrt(16.0d0 * pi / 5.0d0) * rad
+!    idx = idx + 1; index(2, 0, 0, 2, 2) = idx
+!    val(idx) = +0.5d0 * 1.0d0/sqrt(2.0d0) * sqrt(16.0d0 * pi / 15.0d0) * rad
+!    idx = idx + 1; index(2, 0, 0, 2,-2) = idx
+!    val(idx) = +0.5d0 * 1.0d0/sqrt(2.0d0) * sqrt(16.0d0 * pi / 15.0d0) * rad        
+!    ! D y2
+!    idx = idx + 1; index(0, 2, 0, 2, 0) = idx
+!    val(idx) = -0.5d0 * sqrt(16.0d0 * pi / 5.0d0) / 3.0d0 * rad
+!    idx = idx + 1; index(0, 2, 0, 0, 0) = idx
+!    val(idx) = +0.5d0 * 2.0d0 / 3.0d0 * sqrt(16.0d0 * pi / 5.0d0) * rad
+!    idx = idx + 1; index(0, 2, 0, 2, 2) = idx
+!    val(idx) = -0.5d0 * 1.0d0/sqrt(2.0d0) * sqrt(16.0d0 * pi / 15.0d0) * rad
+!    idx = idx + 1; index(2, 0, 0, 2,-2) = idx
+!    val(idx) = -0.5d0 * 1.0d0/sqrt(2.0d0) * sqrt(16.0d0 * pi / 15.0d0) * rad    
+!    ! D z2
+!    idx = idx + 1; index(0, 0, 2, 2, 0) = idx
+!    val(idx) = rad * sqrt(16.0d0 * pi / 5.0d0) / 3.0d0
+!    idx = idx + 1; index(0, 0, 2, 0, 0) = idx
+!    val(idx) = rad * sqrt(16.0d0 * pi / 4.0d0) / 3.0d0
+!    ! Dxy
+!    idx = idx + 1; index(1, 1, 0, 2, 2) = idx
+!    val(idx) = +rad * sqrt(4.0d0 * pi / 15.0d0) / (sqrt(2.0d0) * ii)
+!    idx = idx + 1; index(1, 1, 0, 2,-2) = idx
+!    val(idx) = -rad * sqrt(4.0d0 * pi / 15.0d0) / (sqrt(2.0d0) * ii)
     
-    
-  end subroutine project_SH_GTO
-  subroutine find_sh()
+ ! end subroutine project_SH_GTO
 end module Mod_IntIn

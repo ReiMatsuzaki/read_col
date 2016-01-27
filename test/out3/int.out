@@ -141,9 +141,10 @@
 0REFERENCES 
 
       SYMMETRY ANALYSIS (EQUAL CONTRIBUTIONS),
-      R. M. PITZER, J.CHEM. PHYS. 58, 3111 (1973)./
+      R. M. PITZER, J. CHEM. PHYS. 58, 3111 (1973).
+
       AO INTEGRAL EVALUATION (HONDO),
-      M. DUPUIS, J. RYS, AND H. F. KING, J. CHEM. PHYS. 65, 111(1976).,
+      M. DUPUIS, J. RYS, AND H. F. KING, J. CHEM. PHYS. 65, 111 (1976).
 
 
 
@@ -440,47 +441,9 @@
   1,  XX -1.000
   1,  YY -1.000
   1,  ZZ  2.000
- IST,ITYP(IST),NSO(IST)
- 1SGG  11
- 2SGU   5
- 3PXU   3
- 4PXG   3
- 5PYU   3
- 6PYG   3
- 7B1G   0
- 8AU    0
- ISO, MS(ISO), MNL(ISO)
-           1      1      1
-           2      1      1
-           3      1      2
-           4      2      1
-           5      2      1
-           6      2      1
-           7      2      4
-           8      2      4
-           9      2      4
-          10      2      4
-          11      2      4
-          12      1      1
-          13      1      1
-          14      1      1
-          15      1      1
-          16      1      2
-          17      1      2
-          18      1      2
-          19      1      2
-          20      1      2
-          21      1      2
-          22      1      2
-          23      1      2
-          24      1      2
-          25      1      2
-          26      1      2
-          27      1      2
-          28      1      2
 1   CX   1977
  ICXST    120
                 105 S INTEGRALS IN 1 BLOCKS
                 105 T INTEGRALS IN 1 BLOCKS
                 105 V INTEGRALS IN 1 BLOCKS
-               13312 INTEGRALS IN    17 BLOCKS
+               13222 INTEGRALS IN    17 BLOCKS
