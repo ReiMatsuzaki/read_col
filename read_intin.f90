@@ -91,6 +91,40 @@ contains
   end subroutine SymVec_new_read
 end module Mod_SymVec
 
+!module Mod_GTO
+!  implicit none
+!  type GTO
+!     integer :: num
+!     integer :: lmp1
+!     complex*16, allocatable :: zeta(:)
+!     complex*16, allocatable :: eta(:)
+!  end type GTO
+!contains
+!  subroutine GTO_new(this, lmp1, num)
+!    type(GTO), intent(out) :: this
+!    this % num = num
+!    this % lmp1 = lmp1
+!    allocate(this % zeta(num))
+!    allocate(this % eta(num))
+!  end subroutine GTO_new
+!  subroutine GTO_delete(this)
+!    type(GTO), intent(inout) :: this
+!    deallocate(this % zeta)
+!    deallocate(this % eta)
+!  end subroutine GTO_delete
+!  subroutine GTO_at(this, r, res)
+!    type(GTO), intent(in) :: this
+!    real*8, intent(in)    :: r
+!    complex*16, intent(out)   :: res
+!
+!    integer i
+!    res = (0.0d0, 0.0d0)
+!    do i =  1, this % num
+!       res = res + this % eta(i) * r ** this % lmp1 * exp(-this % zeta(i) * r * r)
+!    end do
+!  end subroutine GTO_at
+!end module Mod_GTO
+
 module Mod_IntIn
   implicit none
   integer :: nx(5,10)
@@ -159,22 +193,47 @@ module Mod_IntIn
      ! ==== Symmetry Adapted Basis ====
      integer mcons(108)      ! (MCONS(ISF)) index of contracted GTO
      integer mgcs(108)       ! (MGCS(ISF)) index of GCS
+
+     ! ==== access from Symmetry Adapted Basis ====
+     integer :: nsab_ist(8)
+     integer :: isf_ist_isab(8, 108)
+     integer :: is_ist_isab(8, 108)
+     integer :: ics_ist_isab(8, 108)
      
   end type IntIn
   type SymGtos
-     ! atoms
+     ! ==== Gtos ====
+!     type(GTO), allocatable  :: gto_isf(:)
+     integer :: L
+     integer :: M
+     real*16 :: coef_ylm
+
+     ! ==== Atoms ====
+     
+
+     
+     ! ==== Symmetry ====
+     ! number of Symmetry
+     ! ist <- nst
+     integer :: nst  
+     character*4, allocatable :: ityp_ist(:) ! name of symmetry
+
+     ! (isf_list(i),i=offset_ist(ist),offset_ist(ist+1))
+     ! gives index list of isf in ist symmetry     
+     integer, allocatable :: isf_list(:)
+
+     ! (ict_list(i),i=offset_ist(ist),offset_ist(ist+1))
+     ! gives index list of ict in ist symmetry
+     integer, allocatable :: ict_list(:)
+
+     ! used for isf_list and ict_list
+     integer, allocatable :: offset_ist(:)
+     
      integer :: ns
      integer:: nc_is(10)
      real*8 :: x_ic_is(1, 1)
      real*8 :: y_ic_is(1, 1)
      real*8 :: z_ic_is(1, 1)
-
-     ! Symmetry
-     integer     :: nst          ! number of symmetry
-     character*4 :: ityp_ist(10) ! name of symmetry
-     
-     ! Symmetry adapted basis
-     integer :: num_sab_ist(10) ! number of Symmetry Adapted Basis
      
   end type SymGtos
 contains
@@ -288,6 +347,7 @@ contains
           icons = this % mcons(isf)
           igcs  = this % mgcs(isf)
           do ics = 1, this % ncs(igcs)
+             
              call IntIn_find_harmonics( &
                   this % igc2(:, ics, igcs), &
                   this % lmnp1(this % mcons(isf)), &
@@ -297,6 +357,27 @@ contains
           end do
        end do
     end do
+
+    ! ==== Set index access from SAB ====
+    write(*, *) "Set index access from SAB"
+    this % nsab_ist(:) = 0
+    isf = 0
+    do is = 1, this % ns
+       do if = 1, this % nf(is)
+          isf = isf + 1
+          icons = this % mcons(isf)
+          igcs  = this % mgcs(isf)
+          iaords= this % maords(igcs)
+          do ics = 1, this % ncs(igcs)
+             ist = this % la(ics, iaords)
+             this % nsab_ist(ist) = this % nsab_ist(ist) + 1
+             this % isf_ist_isab(ist, this % nsab_ist(ist)) = isf
+             this % is_ist_isab(ist, this % nsab_ist(ist)) = is
+             this % ics_ist_isab(ist, this % nsab_ist(ist)) = ics
+          end do
+       end do
+    end do
+    
   end subroutine IntIn_new_read
   subroutine IntIn_find_harmonics(igc2, lmp1, L, M, c)
 
@@ -413,6 +494,48 @@ contains
     end do
   end subroutine IntIn_show
   subroutine IntIn_show_basis_symmetry(this)
+    type(IntIn) :: this
+    integer     :: ist, isab
+    integer     :: isf, is, ics, ic, icon, ict, idx_gto, igcs, lmp1, icons
+
+    do ist = 1, this % nst
+       write(*, '(A4)') this % ityp(ist)
+       do isab = 1, this % nsab_ist(ist)
+          isf = this % isf_ist_isab(ist, isab)
+          is  = this % is_ist_isab(ist, isab)
+          ics = this % ics_ist_isab(ist, isab)
+          icons = this % mcons(isf)
+          igcs = this % mgcs(isf)
+          lmp1 = this % lmnp1(icons)
+          write(*, '(I2)', advance='no') this % mcons(isf)
+          write(*, '(" Y(", I2, I2, F8.5, ")" )', advance='no') &
+               this % gto_l_isf_ics(isf, ics), &
+               this % gto_m_isf_ics(isf, ics), &
+               this % gto_c_isf_ics(isf, ics)
+
+          ict = 0
+          do ic = 1, this % nc(is)
+             do idx_gto = 1, num_gto(lmp1)
+                ict = ict + 1
+                if(abs(this % igc(ict, ics, igcs)) > 0.001) then
+                   write(*, '(f5.1)', advance='no') this % igc(ict, ics, igcs)
+                   write(*, '("[",3I1,"]@",I1,A3)', advance='no') &
+                        nx(lmp1, idx_gto), ny(lmp1, idx_gto), nz(lmp1, idx_gto), &
+                        ic, this % mtype(is)
+                end if
+             end do
+                
+             do icon = 1, this % ncon(isf)
+             end do
+                
+          end do
+          write(*, *) ""
+
+       end do
+    end do
+    
+  end subroutine IntIn_show_basis_symmetry
+  subroutine IntIn_show_basis_symmetry2(this)
     type(IntIn) this
     integer is, ic, isf, icon, if, igto, igcs, ics, ict, ir, idx_gto
     integer iaords, ist
@@ -462,9 +585,7 @@ contains
        end do
     end do
     
-  end subroutine IntIn_show_basis_symmetry
-  subroutine IntIn_project_sh_gto()
-  end subroutine IntIn_project_sh_gto
+  end subroutine IntIn_show_basis_symmetry2
 !    subroutine project_SH_GTO(eta, zeta, nx, ny, nz, L, M, r, res)
 !    complex*16, intent(in) :: eta, zeta
 !    integer, intent(in)    :: nx, ny, nz, L, M

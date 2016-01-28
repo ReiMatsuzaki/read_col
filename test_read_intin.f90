@@ -7,9 +7,8 @@ program main
   type(IntIn) int_in
 
   call IntIn_new_read(int_in)
-  !  call IntIn_show_basis_symmetry(int_in)
-
-  call test_SymVec()
+  call IntIn_show_basis_symmetry(int_in)
+  ! call test_SymVec()
 contains
   subroutine test_SymVec()
     type(SymVec) vec, vec2
