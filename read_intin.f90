@@ -125,7 +125,44 @@ end module Mod_SymVec
 !  end subroutine GTO_at
 !end module Mod_GTO
 
+module Mod_GTO  
+  use Mod_Utils
+  implicit none
+contains
+  subroutine gto_int(pn, a, res)
+    integer, intent(in) :: pn
+    complex*16, intent(in) :: a
+    complex*16, intent(out) :: res
+    integer :: n, nn, k
+    
+    ! S_0^oo exp(-ax^2) dx = sqrt(pi/4a)
+    ! S_0^oo x^2n exp(-ax^2) dx = (2n-1)! / (2 (2a)^n) x sqrt(pi/a)
+    ! S_(-oo)^(oo) x^n exp(-zr^2) dx = 2
+
+    if(pn .eq. 0) then
+       res = sqrt(pi / (4.0d0 *a))
+    else if(mod(pn, 2) .eq. 1) then
+       n = (pn - 1) / 2
+       nn = 1
+       do k = 1, n
+          nn = nn * k
+       end do
+       res = (1.0d0 * nn) / (2.0d0 * a**(n+1))
+    else if(mod(pn, 2) .eq. 0) then
+       n = pn / 2
+
+       nn = 1
+       do k = 1, 2*n-1, 2
+          nn = nn * k
+       end do       
+       res = 1.0d0 * nn / (2.0d0 * (2.0d0*a) ** n)  * sqrt(pi / a)
+    end if
+    
+  end subroutine gto_int
+end module Mod_Gto
+
 module Mod_IntIn
+  use Mod_GTO
   implicit none
   integer :: nx(5,10)
   integer :: ny(5,10)
@@ -169,9 +206,9 @@ module Mod_IntIn
      !                       ! IGCS : index of GTO Reduction Sets
      integer :: gto_l_isf_ics(108, 10) ! L in real Spherical Harmonics
      integer :: gto_m_isf_ics(108, 10) ! M in real Spherical Harmonics
-     real*8 ::  gto_c_isf_ics(108, 10) ! coefficient of real Spherical Harmonics
+!     real*8 ::  gto_c_isf_ics(108, 10) ! coefficient of real Spherical Harmonics
      !                         ! GTO in real Spherical Harmonics form becomes
-     !                              eta r^n exp(-zeta r^2) c Y_LM
+     !                              eta r^n exp(-zeta r^2) Y_LM
 
      ! ==== GTOs ====
      integer lmnp1(108)      ! (lmnp1(ICONS), ICONS<-NCONS) : L+1
@@ -237,6 +274,7 @@ module Mod_IntIn
      
   end type SymGtos
 contains
+
   subroutine IntIn_init()
 
     ! S
@@ -260,25 +298,45 @@ contains
     nz(4, :) = (/0, 0, 3, 0, 1, 0, 1, 2, 2, 1/)
     
   end subroutine IntIn_init
-  subroutine IntIn_new_read(this)
-    type(IntIn) this
-!    integer ifile
+  subroutine IntIn_new_read(this, ifile, showq)
+    type(IntIn), intent(inout) :: this
+    integer, intent(in)        :: ifile
+    logical, intent(in)        :: showq
 
     integer ist, idpt, jst, kst, iaords, iru, ir, igcs, icsu, ictu, ics, ict, icons, iconu, icon, isf, is, ic, ig, ng, if, ndpt
     integer it
     call IntIn_init()
     
     !    read(*, "(1H1, 8A10)") this % blabel
-    read(*, *) this % blabel    
-    read(*, '((2F16.10,9I3))') this % cscale, this % thetad, this % notwo, this % negl
-    read(*, '(26I3)') this % ngen, this % ns, this % naords, this % ncons, this % ngcs, this % itol, this % icut
+    read(ifile, *) this % blabel
+    if(showq) then
+       write(*, *) this % blabel
+    end if
+    read(ifile, '((2F16.10,9I3))') this % cscale, this % thetad, this % notwo, this % negl
+    if(showq) then
+       write(*, '((2F16.10,9I3))') this % cscale, this % thetad, this % notwo, this % negl
+    end if
+    read(ifile, '(26I3)') this % ngen, this % ns, this % naords, this % ncons, this % ngcs, this % itol, this % icut
+    if(showq) then
+       write(*, '(26I3)') this % ngen, this % ns, this % naords, this % ncons, this % ngcs, this % itol, this % icut
+    end if
+    
 
-    read(*, '(I3, 12(I3,A3))') this % nst, (this % nd(ist), this % ityp(ist), ist=1, this % nst)
+    read(ifile, '(I3, 12(I3,A3))') this % nst, (this % nd(ist), this % ityp(ist), ist=1, this % nst)
+    if(showq) then
+       write(*, '(I3, 12(I3,A3))') this % nst, (this % nd(ist), this % ityp(ist), ist=1, this % nst)
+    end if
 
     ! ==== Group product table====
-    read(*, *) ndpt
+    read(ifile, *) ndpt
+    if(showq) then
+       write(*, *) ndpt
+    end if
     do idpt = 1, ndpt
-       read(*, *) ist, jst, kst
+       read(ifile, *) ist, jst, kst
+       if(showq) then
+          write(*, *) ist, jst, kst
+       end if
        this % idp(ist, jst, kst) = 1
        this % idp(ist, kst, jst) = 1
        this % idp(jst, ist, kst) = 1
@@ -290,17 +348,26 @@ contains
 
     ! ==== AO ReDuction Sets ====
     do iaords = 1, this % naords
-       read(*, '(10I3)') iru, (this % la(ir, iaords), ir = 1, iru)
+       read(ifile, '(10I3)') iru, (this % la(ir, iaords), ir = 1, iru)
+       if(showq) then
+          write(*, '(10I3)') iru, (this % la(ir, iaords), ir = 1, iru)
+       end if
        this % nr(iaords) = iru
     end do
     
     ! ==== GTO contractions ====
     do igcs = 1, this % ngcs
-       read(*, '(10I3)') icsu, ictu, this % maords(igcs)
+       read(ifile, '(10I3)') icsu, ictu, this % maords(igcs)
+       if(showq) then
+          write(*, '(10I3)') icsu, ictu, this % maords(igcs)
+       end if
        this % nct(igcs) = ictu         ! nct(IGCS) : # of GTOs
        this % ncs(igcs) = icsu         ! ncs(ICS)  : # of symmetry
        do ics = 1, icsu
-          read(*, '(10I3)') (this % igc2(ict, ics, igcs), ict=1, ictu)
+          read(ifile, '(10I3)') (this % igc2(ict, ics, igcs), ict=1, ictu)
+          if(showq) then
+             write(*, '(10I3)') (this % igc2(ict, ics, igcs), ict=1, ictu)
+          end if
           do ict = 1, ictu
              it = this % igc2(ict, ics, igcs)
              if(it .eq. 0) then
@@ -313,33 +380,58 @@ contains
     end do
 
     ! ==== GTO ====
-    write(*, *) "reading GTOs"
     do icons = 1, this % ncons
-       read(*, '(2I3,A4)') iconu, this % lmnp1(icons), this %istar(icons)
-       read(*, '(4D14.8)') (this % zet(icon, icons), this % eta(icon, icons), icon = 1, iconu)
+       read(ifile, '(2I3,A4)') iconu, this % lmnp1(icons), this %istar(icons)
+       if(showq) then
+          write(*, '(2I3,A4)') iconu, this % lmnp1(icons), this %istar(icons)
+       end if
+       read(ifile, '(4D14.8)') (this % zet(icon, icons), this % eta(icon, icons), icon = 1, iconu)
+       if(showq) then
+          write(*, '(4D14.8)') (this % zet(icon, icons), this % eta(icon, icons), icon = 1, iconu)
+       end if
        this % ncon(icons) = iconu
     end do
 
     ! ==== Atoms ====
-    write(*, *) "reading atoms"
     isf = 0
     do is = 1, this % ns
-       read(*, *) this % mtype(is), this % nf(is), this % nc(is), this % chg(is)
-       read(*, *) (this % x(ic, is), this % y(ic, is), this % z(ic, is), ic = 1, this % nc(is))
+       read(ifile, '(A3,2I3,F3.0)') this % mtype(is), this % nf(is), this % nc(is), this % chg(is)
+       if(showq) then
+          write(*, '(A3,2I3,F3.0)') this % mtype(is), this % nf(is), this % nc(is), this % chg(is)
+       end if
+       read(ifile, *) (this % x(ic, is), this % y(ic, is), this % z(ic, is), ic = 1, this % nc(is))
+       if(showq) then
+          write(*, *) (this % x(ic, is), this % y(ic, is), this % z(ic, is), ic = 1, this % nc(is))
+       end if
        ng = this % ngen + 1
        if(this % nc(is) > 1) then
           do ig = 2, ng
-             read(*, *) (this % ica(ic, is, ig), ic = 1, this % nc(is))
+             read(ifile, *) (this % ica(ic, is, ig), ic = 1, this % nc(is))
+             if(showq) then
+                write(*, *) (this % ica(ic, is, ig), ic = 1, this % nc(is))
+             end if
           end do
        end if
        do if = 1, this % nf(is)
           isf = isf + 1
-          read(*, *) this % mcons(isf), this % mgcs(isf)
+          read(ifile, *) this % mcons(isf), this % mgcs(isf)
+          if(showq) then
+             write(*, *) this % mcons(isf), this % mgcs(isf)
+          end if
        end do
     end do
 
-    ! ==== Find real Spherical Harmonics ====
-    write(*, *) "Find real spherical "
+
+    call IntIn_set_spherical_harmonics(this)
+    call IntIn_set_symmetry_access(this)
+    call IntIn_normalize(this)
+    
+  end subroutine IntIn_new_read
+  subroutine IntIn_set_spherical_harmonics(this)
+
+    type(IntIn), intent(inout) :: this
+    integer isf, is, if, icons, igcs, ics
+    
     isf = 0
     do is = 1, this % ns
        do if = 1, this % nf(is)
@@ -352,14 +444,14 @@ contains
                   this % igc2(:, ics, igcs), &
                   this % lmnp1(this % mcons(isf)), &
                   this % gto_l_isf_ics(isf, ics), &
-                  this % gto_m_isf_ics(isf, ics), &
-                  this % gto_c_isf_ics(isf, ics))
+                  this % gto_m_isf_ics(isf, ics))
           end do
        end do
-    end do
-
-    ! ==== Set index access from SAB ====
-    write(*, *) "Set index access from SAB"
+    end do    
+  end subroutine IntIn_set_spherical_harmonics
+  subroutine IntIn_set_symmetry_access(this)
+    type(IntIn), intent(inout) :: this
+    integer isf, is, if, icons, igcs, iaords, ics, ist
     this % nsab_ist(:) = 0
     isf = 0
     do is = 1, this % ns
@@ -377,19 +469,44 @@ contains
           end do
        end do
     end do
+  end subroutine IntIn_set_symmetry_access
+  subroutine IntIn_normalize(this)
+    type(IntIn), intent(inout) :: this
+    integer :: icons, icon, jcon
+    complex*16 :: cumsum, norm, int_val, zet, eta
+    integer :: pn
+
+    ! u(r) = r^(n+1) Y_LM(^r) \sum_i eta_i exp(-zet_i r^2)
+    ! (u, u) = \sum_ij eta_i eta_j (r^(2n+2) exp(-(zet_i+zet_j) r^2))
+
     
-  end subroutine IntIn_new_read
-  subroutine IntIn_find_harmonics(igc2, lmp1, L, M, c)
+    do icons = 1, this % ncons
+       pn = this % lmnp1(icons)
+       cumsum = (0.0d0, 0.0d0)
+       do icon = 1, this % ncon(icons)
+          do jcon = 1, this % ncon(icons)
+             zet = this % zet(icon, icons) * this % zet(jcon, icons)
+             eta = this % eta(icon, icons) * this % eta(jcon, icons)
+             call gto_int(2 * pn, zet, int_val)
+             cumsum = cumsum + eta * int_val
+          end do
+       end do
+       norm = sqrt(cumsum)
+       do icon = 1, this % ncon(icons)
+          this % eta(icon, icons) = this % eta(icon, icons) / norm
+       end do
+    end do
+  end subroutine IntIn_normalize
+  subroutine IntIn_find_harmonics(igc2, lmp1, L, M)
 
     ! x^n1 y^n2 z^n3 = coef r^n Y_LM
     
     integer, intent(in) :: igc2(:)
     integer, intent(in) :: lmp1
     integer, intent(out) :: L, M
-    real*8, intent(out)  :: c
     integer :: num
     real*8, parameter :: pi = 4.0d0 * atan(1.0d0)
-    
+    real*8 :: c
     
     num = size(igc2)
 
@@ -474,12 +591,13 @@ contains
     do igcs = 1, this % ngcs
        write(*, '(10I3)') this % ncs(igcs), this % nct(igcs), this % maords(igcs)
        do ics = 1, this % ncs(igcs)
-          write(*, '(10I3)') (this % igc(ict, ics, igcs), ict=1, this%nct(igcs))
+          write(*, '(10f6.2)') (this % igc(ict, ics, igcs), ict=1, this%nct(igcs))
        end do
     end do
     do icons = 1, this % ncons
        write(*, '(2I3,A4)') this % ncon(icons), this % lmnp1(icons), this %istar(icons)
-       write(*, '(4D14.8)') (this % zet(icon, icons), this % eta(icon, icons), icon = 1, this % ncon(icons))
+       !write(*, '(4D14.8)') (this % zet(icon, icons), this % eta(icon, icons), icon = 1, this % ncon(icons))
+       write(*, *) (this % zet(icon, icons), this % eta(icon, icons), icon = 1, this % ncon(icons))
     end do
     
     isf = 0
@@ -508,10 +626,10 @@ contains
           igcs = this % mgcs(isf)
           lmp1 = this % lmnp1(icons)
           write(*, '(I2)', advance='no') this % mcons(isf)
-          write(*, '(" Y(", I2, I2, F8.5, ")" )', advance='no') &
+          write(*, '(" Y(", I2, I2, ")" )', advance='no') &
                this % gto_l_isf_ics(isf, ics), &
-               this % gto_m_isf_ics(isf, ics), &
-               this % gto_c_isf_ics(isf, ics)
+               this % gto_m_isf_ics(isf, ics)
+
 
           ict = 0
           do ic = 1, this % nc(is)
@@ -524,10 +642,11 @@ contains
                         ic, this % mtype(is)
                 end if
              end do
-                
-             do icon = 1, this % ncon(isf)
-             end do
-                
+          end do
+          
+          write(*, *)
+          do icon = 1, this % ncon(isf)
+             write(*, '(4f10.5)') this % zet(icon, icons), this % eta(icon, icons)
           end do
           write(*, *) ""
 
@@ -558,10 +677,9 @@ contains
              ist = this % la(ir, iaords)
              write(*, '(I2, "  ")', advance='no') igto
              write(*, '(A4)', advance='no') this % ityp(ist) 
-             write(*, '("Y(", I2, I2, F8.5, ")" )', advance='no') &
+             write(*, '("Y(", I2, I2, ")" )', advance='no') &
                   this % gto_l_isf_ics(isf, ics), &
-                  this % gto_m_isf_ics(isf, ics), &
-                  this % gto_c_isf_ics(isf, ics)
+                  this % gto_m_isf_ics(isf, ics)
              
              ict = 0
              do ic = 1, this % nc(is)
@@ -586,74 +704,4 @@ contains
     end do
     
   end subroutine IntIn_show_basis_symmetry2
-!    subroutine project_SH_GTO(eta, zeta, nx, ny, nz, L, M, r, res)
-!    complex*16, intent(in) :: eta, zeta
-!    integer, intent(in)    :: nx, ny, nz, L, M
-!    real*8, intent(in)     :: r
-!    complex*16, intent(out) :: res
-!    complex*16 :: rad
-!    integer :: n
-!    real*8 :: pi = atan(1.0d0)*4.0d0
-!    integer, parameter :: index_upper = 10
-!    integer, parameter :: nu = 3
-!    integer, parameter :: lu = 3
-!    complex * 16 :: val(index_upper)
-!    integer :: index(0:nu, 0:nu, 0:nu,  0:lu, -lu:lu)
-!    integer :: ix, iy, iz, idx
-!    complex*16, parameter :: ii = (0.0d0, 1.0d0)
-!
-!    n = nx + ny + nz
-!    rad = eta * (r ** n)* exp(-zeta * r * r)
-!    index(:, :, :, :, :) = 0
-!    val(:) = (0.0d0, 0.0d0)
-!    idx = 0
-!
-!    ! S
-!    idx = idx + 1; index(0, 0, 0, 0, 0) = idx
-!    val(idx) = rad * sqrt(4.0d0 * pi)
-!
-!    ! Px
-!    idx = idx + 1; index(1, 0, 0, 1, 1) = idx
-!    val(idx) = -rad * sqrt(4.0d0 * pi / 3.0d0) / sqrt(2.0d0)
-!    idx = idx + 1; index(1, 0, 0, 1, -1) = idx
-!    val(idx) = +rad * sqrt(4.0d0 * pi / 3.0d0) / sqrt(2.0d0)
-!    ! Py
-!    idx = idx + 1; index(0, 1, 0, 1, 1) = idx
-!    val(idx) = -rad * sqrt(4.0d0 * pi / 3.0d0) / (sqrt(2.0d0) * ii)
-!    idx = idx + 1; index(0, 1, 0, 1,-1) = idx
-!    val(idx) = -rad * sqrt(4.0d0 * pi / 3.0d0) / (sqrt(2.0d0) * ii)
-!    ! Pz
-!    idx = idx + 1; index(0, 1, 0, 1, 0) = idx
-!    val(idx) = rad * sqrt(4.0d0 * pi / 3.0d0)
-!
-!    ! D x2
-!    idx = idx + 1; index(2, 0, 0, 2, 0) = idx
-!    val(idx) = -0.5d0 * sqrt(16.0d0 * pi / 5.0d0) / 3.0d0 * rad
-!    idx = idx + 1; index(2, 0, 0, 0, 0) = idx
-!    val(idx) = +0.5d0 * 2.0d0 / 3.0d0 * sqrt(16.0d0 * pi / 5.0d0) * rad
-!    idx = idx + 1; index(2, 0, 0, 2, 2) = idx
-!    val(idx) = +0.5d0 * 1.0d0/sqrt(2.0d0) * sqrt(16.0d0 * pi / 15.0d0) * rad
-!    idx = idx + 1; index(2, 0, 0, 2,-2) = idx
-!    val(idx) = +0.5d0 * 1.0d0/sqrt(2.0d0) * sqrt(16.0d0 * pi / 15.0d0) * rad        
-!    ! D y2
-!    idx = idx + 1; index(0, 2, 0, 2, 0) = idx
-!    val(idx) = -0.5d0 * sqrt(16.0d0 * pi / 5.0d0) / 3.0d0 * rad
-!    idx = idx + 1; index(0, 2, 0, 0, 0) = idx
-!    val(idx) = +0.5d0 * 2.0d0 / 3.0d0 * sqrt(16.0d0 * pi / 5.0d0) * rad
-!    idx = idx + 1; index(0, 2, 0, 2, 2) = idx
-!    val(idx) = -0.5d0 * 1.0d0/sqrt(2.0d0) * sqrt(16.0d0 * pi / 15.0d0) * rad
-!    idx = idx + 1; index(2, 0, 0, 2,-2) = idx
-!    val(idx) = -0.5d0 * 1.0d0/sqrt(2.0d0) * sqrt(16.0d0 * pi / 15.0d0) * rad    
-!    ! D z2
-!    idx = idx + 1; index(0, 0, 2, 2, 0) = idx
-!    val(idx) = rad * sqrt(16.0d0 * pi / 5.0d0) / 3.0d0
-!    idx = idx + 1; index(0, 0, 2, 0, 0) = idx
-!    val(idx) = rad * sqrt(16.0d0 * pi / 4.0d0) / 3.0d0
-!    ! Dxy
-!    idx = idx + 1; index(1, 1, 0, 2, 2) = idx
-!    val(idx) = +rad * sqrt(4.0d0 * pi / 15.0d0) / (sqrt(2.0d0) * ii)
-!    idx = idx + 1; index(1, 1, 0, 2,-2) = idx
-!    val(idx) = -rad * sqrt(4.0d0 * pi / 15.0d0) / (sqrt(2.0d0) * ii)
-    
- ! end subroutine project_SH_GTO
 end module Mod_IntIn
