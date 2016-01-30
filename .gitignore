@@ -15,3 +15,10 @@ test_read_mocoef
 **/MOINTS
 **/fort*
 *.o
+*.dSYM
+*.dat
+gto_vec
+solve_1e
+read_aoints
+test_utils
+bin_civec
