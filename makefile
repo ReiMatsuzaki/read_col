@@ -14,10 +14,10 @@ solve_1e: read_aoints.o solve_1e.o
 run_solve_1e: solve_1e
 	cd test/out && ../../solve_1e
 
-gto_vec: read_intin.o gto_vec.o 
+gto_vec: utils.o read_intin.o gto_vec.o 
 	${FC} ${FFLAG} $^ ${LIBLAPACK} -o $@
 run_gto_vec: gto_vec
-	cd test/out && ../../gto_vec < int.in && cat delta.dat
+	cd test/out && ../../gto_vec int.in gto_vec_delta.in  && cat gto_vec_delta.dat
 
 
 # ==== Unit Tests ====

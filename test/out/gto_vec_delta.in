@@ -1,0 +1,4 @@
+&gto_vec
+r0=10.0
+dat_path="gto_vec_delta.dat"
+/

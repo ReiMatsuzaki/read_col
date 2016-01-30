@@ -1,5 +1,19 @@
 ! Diagonalize Core hamiltonian and write its eigen values
 ! and eigen vectors.
+!
+! Input file
+! ----------
+! aoints : path for AOINTS (AOINTS)
+! symmetry: calculation target symmetry index
+! num_eigvec: # of eigen vectors which you want to obtain
+!
+! Output file
+! (Input file infomation)
+! eigen value 1
+! eigen vector 1
+! eigen value 2
+! eigen vector 2
+! ....
 
 
 program main
@@ -14,6 +28,7 @@ program main
   complex*16, allocatable :: h_mat(:, :), s_mat(:, :)
   complex*16 :: val
   logical have_val
+  complex*16, allocatable :: eigval(:), eigvec(:, :)
 
   isym = 1
   open(unit=ifile, file='AOINTS', status='old', form='unformatted')
@@ -29,6 +44,8 @@ program main
 
   allocate(h_mat(num_i, num_j))
   allocate(s_mat(num_i, num_j))
+  allocate(eigval(num_i))
+  allocate(eigvec(num_i, num_j))
 
   do i = 1, num_i
      do j = 1, num_j
@@ -41,13 +58,27 @@ program main
      end do
   end do
 
-  write(*, *) h_mat
-  
+  !  write(*, *) h_mat
   !  call AoInts_show(ao)
+
+  ! Is there exist for solving generalized eigen value problam
+  ! HX=eSX ?
+
+  call LA_GEES(s_mat, eigval, eigvec)
+
+  ! ==== write results ====
+  write(*, *) num_i
+  write(*, *) isym
+  do i = 1, num_i
+     write(*, *) eigval(i)
+     do j = 1, num_j
+        write(*, *) eigvec(i, j)
+     end do
+  end do
+
+  ! ==== Finalize ====
   call AoInts_delete(ao)
-  
+  deallocate(h_mat, s_mat, eigval, eigvec)
   close(unit=ifile)
-  
-  write(*, *) "hello"
   
 end program main
