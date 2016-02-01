@@ -1,0 +1,14 @@
+1/4/2
+  8  8
+ 26  1
+ 22  2
+ 22  3
+ 4  4
+ 22  5
+ 4  6
+ 4  7
+ 1  8
+0
+$SDCI  HFCONF=1,   MSYM=1, IDIRCI=1,
+  CILBL='He 1S SDCISingletSz', $END
+ $CIGUES  NCOL=2, $END
