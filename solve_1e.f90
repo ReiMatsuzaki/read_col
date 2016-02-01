@@ -18,7 +18,7 @@
 
 program main
   use Mod_AoInts
-  use f95_lapack, only : LA_GEES
+  use Mod_Utils
   implicit none
 
   type(AoInts) :: ao
@@ -52,27 +52,21 @@ program main
         call SymBlockMat_get(ao % s_mat, isym, isym, i, j, val)
         s_mat(i, j) = val
         call SymBlockMat_get(ao % t_mat, isym, isym, i, j, val)
-        h_mat(i, j) = -0.5d0 * val
+        h_mat(i, j) = val
         call SymBlockMat_get(ao % v_mat, isym, isym, i, j, val)
         h_mat(i, j) = h_mat(i, j) + val
      end do
   end do
 
-  !  write(*, *) h_mat
-  !  call AoInts_show(ao)
-
-  ! Is there exist for solving generalized eigen value problam
-  ! HX=eSX ?
-
-  call LA_GEES(s_mat, eigval, eigvec)
+  call LA_GEEV_GEN(h_mat, s_mat, eigval, eigvec)
 
   ! ==== write results ====
   write(*, *) num_i
   write(*, *) isym
   do i = 1, num_i
-     write(*, *) eigval(i)
+     write(*, *) i, eigval(i)
      do j = 1, num_j
-        write(*, *) eigvec(i, j)
+        write(*, *) eigvec(j, i)
      end do
   end do
 

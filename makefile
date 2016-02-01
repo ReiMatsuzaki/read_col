@@ -9,7 +9,7 @@ LIBLAPACK= -lblas -llapack -llapack95
 	${FC} ${FFLAG} ${MODS} -c $< -o $@
 
 # ==== Binary ====
-solve_1e: read_aoints.o solve_1e.o
+solve_1e: utils.o read_aoints.o solve_1e.o
 	${FC} ${FFLAG} $^ ${LIBLAPACK} -o $@
 run_solve_1e: solve_1e
 	cd test/out && ../../solve_1e

@@ -71,38 +71,5 @@ contains
     call AoInts_delete(ao_ints)
     close(ifile)
   end subroutine test_AoInts
-  subroutine test_diagonalization()
-    use f95_lapack, only : LA_GEES
-    integer,parameter :: n=3
-    integer i, j
-    complex*16 :: A(n,n), AA(n, n)
-    complex*16:: w(n), vs(n, n), tmp(n)
-    complex*16 :: x = (0.0d0, 0.0d0)
-    A(1, 1) = (1.0d0, 0.0d0)
-    A(1, 2) = (2.0d0, 0.0d0)
-    A(2, 1) = (2.0d0, 0.0d0)
-    A(2 ,2) = (1.0d0, 0.0d0)
-    A(3, 3) = (1.1d0, 0.0d0)
-    AA(:, :) = A(:, :)
-
-    call LA_GEES(AA, w, vs)
-    write(*, *) "w"
-    do i = 1, n
-       write(*, *) i, w(i)
-    end do
-    write(*, *) "vs"
-    do i = 1, n
-       write(*, *) (real(vs(i, j)), j = 1, n)
-    end do
-
-    tmp(:) = vs(:, 1)
-    do i = 1, n
-       x = (0.0d0, 0.0d0)
-       do j = 1, n
-          x = x + A(i, j) * tmp(j)
-       end do
-    write(*, *) i, real(x), real(tmp(i) * w(1))
- end do
-  end subroutine test_diagonalization
 end program main
 
