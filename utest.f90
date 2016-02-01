@@ -79,4 +79,65 @@ contains
        call WriteSuccess(label)
     end if
   end subroutine CEq
+  subroutine CArrayEq(label, a, b)
+    character(*), intent(in) :: label
+    complex*16, intent(in) :: a(:), b(:)
+    real*8, parameter      :: eps = 10.0 ** (-14.0)
+    integer :: n
+    real*8, allocatable :: c(:)
+    integer :: i
+
+    if(size(a) .ne. size(b)) then
+       write(*, *) "CArrayEq. size(a) != size(b)"
+       stop
+    end if
+    
+    n = size(a)
+    
+    allocate(c(n))
+
+    do i = 1, n
+       c(i) = abs(a(i) - b(i))
+    end do
+
+    if(maxval(c) > eps) then
+       call WriteFailed(label)
+       write(*, *) "a = ", a
+       write(*, *) "b = ", b
+       write(*, *) "|a-b|_oo = ", maxval(c)
+    else
+       call WriteSuccess(label)
+    end if
+
+    deallocate(c)
+    
+  end subroutine CArrayEq
+  subroutine CMatEq(label, a, b)
+    character(*), intent(in) :: label
+    complex*16, intent(in) :: a(:, :), b(:, :)
+    real*8 :: c(size(a, 1), size(a, 2))
+    real*8, parameter      :: eps = 10.0 ** (-14.0)
+    integer :: i, j
+
+    if(all(shape(a) .ne. shape(b))) then
+       write(*, *) "CArrayEq. shape(a) != shape(b)"
+       stop
+    end if
+    
+    do i = 1, size(a, 1)
+       do j = 1, size(b, 1)
+          c(i, j) = abs(a(i, j) - b(i, j))
+       end do
+    end do
+
+    if(maxval(c) > eps) then
+       call WriteFailed(label)
+       write(*, *) "a = ", a
+       write(*, *) "b = ", b
+       write(*, *) "|a-b|_oo = ", maxval(c)
+    else
+       call WriteSuccess(label)
+    end if
+    
+  end subroutine CMatEq
 end module Mod_UnitTest

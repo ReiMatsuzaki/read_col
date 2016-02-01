@@ -37,6 +37,7 @@ module Mod_SymBlockMat
      integer, allocatable    :: iblock_ijsym(:, :)
   end type SymBlockMat
 contains
+  ! ==== Constructors ====
   subroutine SymBlockMat_new(this, num_isym, isym_iblock, jsym_iblock)
     type(SymBlockMat) this
     integer num_isym(:), isym_iblock(:), jsym_iblock(:)
@@ -63,7 +64,7 @@ contains
 
     ! memory allocation
     allocate(this % val(num_val))
-    allocate(this % offset_iblock(num_block))
+    allocate(this % offset_iblock(num_block+1))
     allocate(this % isym_iblock(num_block))
     allocate(this % jsym_iblock(num_block))
     allocate(this % num_isym(num_sym))
@@ -71,7 +72,7 @@ contains
 
     ! offset_iblock
     this % offset_iblock(1) = 0
-    do iblock = 2, num_block
+    do iblock = 2, num_block + 1
        this % offset_iblock(iblock) = this % offset_iblock(iblock-1) + &
             num_isym(isym_iblock(iblock-1)) * &
             num_isym(jsym_iblock(iblock-1))       
@@ -110,7 +111,7 @@ contains
     type(SymBlockMat) this
     integer, intent(in)    :: isym, jsym, i, j
     res = this % offset_iblock(this % iblock_ijsym(isym, jsym)) + &
-         (i-1) * this % num_isym(jsym) + (j-1) + 1
+         (j-1) * this % num_isym(jsym) + (i-1) + 1
   end function SymBlockMat_index
   subroutine SymBlockMat_set(this, isym, jsym, i, j, val)
     type(SymBlockMat)      :: this
@@ -145,6 +146,25 @@ contains
     end if
     
   end subroutine SymBlockMat_get_block_size
+  subroutine SymBlockMat_get_as_array(this, isym, jsym, mat, have_val)
+    type(SymBlockMat), intent(in) :: this
+    integer, intent(in) :: isym, jsym
+    complex*16, intent(out) :: mat(:, :)
+    logical, intent(out)    :: have_val
+    integer :: num_i, num_j, iblock, idx1, idx2
+
+    call SymBlockMat_get_block_size(this, isym, jsym, num_i, num_j, have_val)
+
+    if(.not. have_val) then
+       return
+    end if
+
+    iblock = this % iblock_ijsym(isym, jsym)
+    idx1 = this % offset_iblock(iblock)
+    idx2 = this % offset_iblock(iblock + 1)
+    mat(:, :) = reshape(this % val(idx1+1 : idx2), (/num_i, num_j/))
+    
+  end subroutine SymBlockMat_get_as_array
   subroutine SymBlockMat_new_read(this, ifile)
     type(SymBlockMat)   :: this
     integer, intent(in) :: ifile

@@ -12,7 +12,7 @@ LIBLAPACK= -lblas -llapack -llapack95
 solve_1e: utils.o read_aoints.o solve_1e.o
 	${FC} ${FFLAG} $^ ${LIBLAPACK} -o $@
 run_solve_1e: solve_1e
-	cd test/out && ../../solve_1e
+	cd test/out2 && ../../solve_1e
 
 gto_vec: utils.o read_intin.o gto_vec.o 
 	${FC} ${FFLAG} $^ ${LIBLAPACK} -o $@
