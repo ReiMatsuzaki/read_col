@@ -21,7 +21,7 @@ run_gto_vec: gto_vec
 
 
 # ==== Unit Tests ====
-test_utils: utest.o utils.o test_utils.o
+test_utils: utest.o utils.o lalgebra.o test_utils.o
 	${FC} ${FFLAG} $^ ${LIBLAPACK} -o $@
 check_utils: test_utils
 	./test_utils
@@ -31,7 +31,7 @@ test_read_aoints:  utest.o read_aoints.o test_read_aoints.o
 check_read_aoints: test_read_aoints
 	cd test/out3 && ../../$< 
 
-test_read_intin: utest.o utils.o read_intin.o test_read_intin.o
+test_read_intin: utils.o utest.o read_intin.o test_read_intin.o
 	${FC} ${FFLAG} $^ -o $@
 check_read_intin: test_read_intin
 	cd test/out3 && ../../test_read_intin < int.in 

@@ -36,10 +36,10 @@ contains
 
 
     call SymVec_get(vec2, 1, 1, v)
-    call CEq("vec2(1,1)", v, (1.0d0, 0.0d0))
+    call Expect_Eq("vec2(1,1)", v, (1.0d0, 0.0d0))
 
     call SymVec_get(vec2, 3, 3, v)
-    call CEq("vec2(1,1)", v, (3.0d0, 2.0d0))    
+    call Expect_Eq("vec2(1,1)", v, (3.0d0, 2.0d0))    
     
   end subroutine test_SymVec
 

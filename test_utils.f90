@@ -1,5 +1,6 @@
 program main
   use Mod_Utils
+  use Mod_LinearAlgebra
   use Mod_UnitTest
   call expect_eq("Pi", 3.1415d0, pi, 0.0001d0)
   call run_test("sort", test_sort_re)

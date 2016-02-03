@@ -25,37 +25,37 @@ program main
   !
   ! ==== Unit test ====
   !
-  call IEq("size(num_mo_sym)", 8, size(wave_func % num_mo_sym))
-  call IEq("num_mo_sym(1)", 8, wave_func % num_mo_sym(1))
-  call IEq("num_mo_sym(2)", 6, wave_func % num_mo_sym(2))
-  call IEq("num_mo_sym(3)", 6, wave_func % num_mo_sym(3))
-  call IEq("num_mo_sym(4)", 2, wave_func % num_mo_sym(4))
-  call IEq("mo_offset(3)", 8+6, wave_func % mo_offset(3))
-  call IEq("mo_offset(4)", 8+6+6, wave_func % mo_offset(4))
-  call CNear("eig_1", wave_func % eig(1), (-1.61242973860195d0, -0.01813005550149d0), eps)
+  call expect_eq("size(num_mo_sym)", 8, size(wave_func % num_mo_sym))
+  call expect_eq("num_mo_sym(1)", 8, wave_func % num_mo_sym(1))
+  call expect_eq("num_mo_sym(2)", 6, wave_func % num_mo_sym(2))
+  call expect_eq("num_mo_sym(3)", 6, wave_func % num_mo_sym(3))
+  call expect_eq("num_mo_sym(4)", 2, wave_func % num_mo_sym(4))
+  call expect_eq("mo_offset(3)", 8+6, wave_func % mo_offset(3))
+  call expect_eq("mo_offset(4)", 8+6+6, wave_func % mo_offset(4))
+  call expect_eq("eig_1", wave_func % eig(1), (-1.61242973860195d0, -0.01813005550149d0), eps)
   
   ! copied from result of bin_civec
   ! 3           5  0.13058947001191537       0.35021669340222594
-  call CNear("ci_3_5", wave_func % coef(3, 5), &
+  call expect_eq("ci_3_5", wave_func % coef(3, 5), &
        (0.13058947001191537d0, 0.35021669340222594d0), eps)
 
   csf3 = wave_func % csf(3)
-  call IEq("csf(3).n_sd", csf3 % n_sd, 2)
-  call IEq("csf(3).n_ele", csf3 % n_ele, 2)
-  call DNear("csf(3).coef(1)", +0.7071067811865475d0 , csf3 % coef(1), eps)
-  call DNear("csf(3).coef(2)", -0.7071067811865475d0 , csf3 % coef(2), eps)
-  call IEq("csf(3).mo(1,1)",     csf3 % mo(1, 1), 3)     ! 11 (3Pz)
-  call IEq("csf(3).mo_sym(1,1)", csf3 % mo_sym(1, 1), 2) !
-  call IEq("csf(3).mo_sym(1,1)", csf3 % spin(1, 1), 1)   ! 
-  call IEq("csf(3).mo(1,2)", csf3 % mo(1, 2), 1)         ! -1 (1S)
-  call IEq("csf(3).mo(1,2)", csf3 % mo_sym(1, 2), 1)     ! 
-  call IEq("csf(3).mo_sym(1,1)", csf3 % spin(1, 2), -1)  ! 
-  call IEq("csf(3).mo(1,2)", csf3 % mo(2, 1),  3)        ! -11 (3Pz)
-  call IEq("csf(3).mo(1,2)", csf3 % mo_sym(2, 1), 2)     !
-  call IEq("csf(3).mo_sym(1,1)", csf3 % spin(2, 1), -1)  !  
-  call IEq("csf(3).mo(1,2)", csf3 % mo(2, 2), 1)         ! 1  (1S)
-  call IEq("csf(3).mo(1,2)", csf3 % mo_sym(2, 2), 1)     !
-  call IEq("csf(3).mo_sym(1,1)", csf3 % spin(2, 2), 1)   ! 
+  call expect_eq("csf(3).n_sd", csf3 % n_sd, 2)
+  call expect_eq("csf(3).n_ele", csf3 % n_ele, 2)
+  call Expect_Eq("csf(3).coef(1)", +0.7071067811865475d0 , csf3 % coef(1), eps)
+  call Expect_Eq("csf(3).coef(2)", -0.7071067811865475d0 , csf3 % coef(2), eps)
+  call expect_eq("csf(3).mo(1,1)",     csf3 % mo(1, 1), 3)     ! 11 (3Pz)
+  call expect_eq("csf(3).mo_sym(1,1)", csf3 % mo_sym(1, 1), 2) !
+  call expect_eq("csf(3).mo_sym(1,1)", csf3 % spin(1, 1), 1)   ! 
+  call expect_eq("csf(3).mo(1,2)", csf3 % mo(1, 2), 1)         ! -1 (1S)
+  call expect_eq("csf(3).mo(1,2)", csf3 % mo_sym(1, 2), 1)     ! 
+  call expect_eq("csf(3).mo_sym(1,1)", csf3 % spin(1, 2), -1)  ! 
+  call expect_eq("csf(3).mo(1,2)", csf3 % mo(2, 1),  3)        ! -11 (3Pz)
+  call expect_eq("csf(3).mo(1,2)", csf3 % mo_sym(2, 1), 2)     !
+  call expect_eq("csf(3).mo_sym(1,1)", csf3 % spin(2, 1), -1)  !  
+  call expect_eq("csf(3).mo(1,2)", csf3 % mo(2, 2), 1)         ! 1  (1S)
+  call expect_eq("csf(3).mo(1,2)", csf3 % mo_sym(2, 2), 1)     !
+  call expect_eq("csf(3).mo_sym(1,1)", csf3 % spin(2, 2), 1)   ! 
 
   STOP
 999 write(*, *) "failed to find CSF file"
