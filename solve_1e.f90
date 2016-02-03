@@ -58,7 +58,7 @@ program main
      end do
   end do
 
-  call LA_GEEV_GEN(h_mat, s_mat, eigval, eigvec)
+  call eigen_sym_gen(h_mat, s_mat, eigval, eigvec)
 
   ! ==== write results ====
   write(*, *) num_i

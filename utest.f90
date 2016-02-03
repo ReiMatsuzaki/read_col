@@ -1,29 +1,53 @@
 module Mod_UnitTest
   implicit none
+  real*8, parameter :: eps_double_prec = 1.0d0**(-14.0d0)
+  interface expect_eq
+     module procedure &
+          expect_eq_int, &
+          expect_eq_double, &
+          expect_eq_complex, &
+          expect_eq_complex_array, &
+          expect_eq_complex_matrix
+  end interface expect_eq
 contains
+  ! ==== Utilities ====
   subroutine WriteSuccess(label)
     character(*) label
-    write(*, *) "Success: ", label
+    print *, "[  PASSED  ] ", label
   end subroutine WriteSuccess
+  subroutine run_test(label, test_sub)
+    character(*), intent(in) :: label
+    interface
+       subroutine test_sub()
+       end subroutine test_sub
+    end interface
+    print *, 
+    print *, "[----------] ", label
+    call test_sub()
+    print *, "[----------] "
+    
+  end subroutine run_test
   subroutine WriteFailed(label)
     character(*) label
-    write(*, *) "FAILED: ", label    
+    write(*, *) "[  FAILED  ] ", label    
   end subroutine WriteFailed
-  subroutine BTrue(label, a)
+  ! ==== Boolean ====
+  subroutine expect_true(label, a)
     character(*) label
     logical a
     if(a) then
-       write(*, *) "Success: ", label
+       call WriteSuccess(label)
     else
-       write(*, *) "FAIED: ", label
+       call WriteFailed(label)
     end if
-  end subroutine BTrue
-  subroutine BFalse(label, a)
+  end subroutine Expect_True
+  subroutine expect_false(label, a)
     character(*) label
     logical a
-    call BTrue(label, .not. a)
-  end subroutine BFalse
-  subroutine IEq(label, a, b)
+    call expect_true(label, .not. a)
+  end subroutine Expect_False
+  ! ==== Equality ====
+  subroutine expect_eq_int(label, a, b)
     character(*) label
     integer a, b
     if(a .eq. b) then
@@ -34,41 +58,18 @@ contains
        write(*, *) "   b = ", b
        call exit(1)
     end if
-  end subroutine IEq
-  subroutine DNear(label, a, b, eps)
-    real*8 a, b, eps
-    character(*) label
-    if(abs(a-b) > eps) then
-       write(*, *) "Failed: ", label
-       write(*, *) "   a = ", a
-       write(*, *) "   b = ", b
-       call exit(1)
-       call exit(1)
+  end subroutine expect_eq_int
+  subroutine expect_eq_double(label, a, b, epsin)
+    real*8, intent(in)   :: a, b
+    character(*), intent(in) ::  label
+    real*8, optional, intent(in) :: epsin
+    real*8 :: eps
+    if(present(epsin)) then
+       eps = epsin
     else
-       write(*, *) "Success: ", label
+       eps =  eps_double_prec
     end if
-  end subroutine DNear
-  subroutine CNear(label, a, b, eps)
-    complex*16 a, b
-    character(*) label
-    real*8 eps
-    if(abs(a-b) > eps) then
-       call WriteFailed(label)
-       write(*, *) "   a = ", a
-       write(*, *) "   b = ", b
-       write(*, *) "   a-b = ", a-b
-       write(*, *) "  |a-b|= ", abs(a-b)
-       write(*, *) "   eps = ", eps
-       call exit(1)
-    else
-       call WriteSuccess(label)
-    end if
-  end subroutine CNear
-  subroutine CEq(label, a, b)
-    complex*16 a, b
-    character(*) label
-    real*8 eps
-    eps = 10.0 ** (-14.0)
+
     if(abs(a-b) > eps) then
        call WriteFailed(label)
        write(*, *) "a = ", a
@@ -78,14 +79,71 @@ contains
     else
        call WriteSuccess(label)
     end if
-  end subroutine CEq
-  subroutine CArrayEq(label, a, b)
+  end subroutine expect_eq_double
+!  subroutine expect_eq_double_near(label, a, b, eps)
+!    real*8 a, b, eps
+!    character(*) label
+!    if(abs(a-b) > eps) then
+!       write(*, *) "Failed: ", label
+!       write(*, *) "   a = ", a
+!       write(*, *) "   b = ", b
+!       call exit(1)
+!       call exit(1)
+!    else
+!       write(*, *) "Success: ", label
+!    end if
+!  end subroutine Expect_Eq_Double_Near
+  subroutine expect_eq_complex(label, a, b, epsin)
+    complex*16, intent(in)   :: a, b
+    character(*), intent(in) :: label
+    real*8, optional, intent(in) :: epsin
+    real*8 :: eps
+    if(present(epsin)) then
+       eps = epsin
+    else
+       eps = eps_double_prec
+    end if
+
+    if(abs(a-b) > eps) then
+       call WriteFailed(label)
+       write(*, *) "a = ", a
+       write(*, *) "b = ", b
+       write(*, *) "a-b=", a-b
+       write(*, *) "|a-b|=", abs(a-b)
+    else
+       call WriteSuccess(label)
+    end if
+  end subroutine Expect_Eq_Complex
+!  subroutine expect_eq_complex_near(label, a, b, eps)
+!    complex*16 a, b
+!    character(*) label
+!    real*8 eps
+!    if(abs(a-b) > eps) then
+!       call WriteFailed(label)
+!       write(*, *) "   a = ", a
+!       write(*, *) "   b = ", b
+!       write(*, *) "   a-b = ", a-b
+!       write(*, *) "  |a-b|= ", abs(a-b)
+!       write(*, *) "   eps = ", eps
+!       call exit(1)
+!    else
+!       call WriteSuccess(label)
+!    end if
+!  end subroutine Expect_Eq_Complex_Near
+  subroutine expect_eq_complex_array(label, a, b, epsin)
     character(*), intent(in) :: label
     complex*16, intent(in) :: a(:), b(:)
-    real*8, parameter      :: eps = 10.0 ** (-14.0)
+    real*8, optional, intent(in) :: epsin
     integer :: n
     real*8, allocatable :: c(:)
     integer :: i
+    real*8 :: eps
+    if(present(epsin)) then
+       eps = epsin
+    else
+       eps = eps_double_prec
+    end if
+
 
     if(size(a) .ne. size(b)) then
        write(*, *) "CArrayEq. size(a) != size(b)"
@@ -111,14 +169,20 @@ contains
 
     deallocate(c)
     
-  end subroutine CArrayEq
-  subroutine CMatEq(label, a, b)
+  end subroutine Expect_Eq_Complex_Array
+  subroutine expect_eq_complex_matrix(label, a, b, epsin)
     character(*), intent(in) :: label
     complex*16, intent(in) :: a(:, :), b(:, :)
+    real*8, optional, intent(in) :: epsin
     real*8 :: c(size(a, 1), size(a, 2))
-    real*8, parameter      :: eps = 10.0 ** (-14.0)
     integer :: i, j
-
+    real*8 :: eps
+    if(present(epsin)) then
+       eps = epsin
+    else
+       eps = eps_double_prec
+    end if
+    
     if(all(shape(a) .ne. shape(b))) then
        write(*, *) "CArrayEq. shape(a) != shape(b)"
        stop
@@ -139,5 +203,6 @@ contains
        call WriteSuccess(label)
     end if
     
-  end subroutine CMatEq
+  end subroutine Expect_Eq_Complex_Matrix
+
 end module Mod_UnitTest
