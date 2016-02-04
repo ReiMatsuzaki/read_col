@@ -7,6 +7,7 @@ program main
   call run_test("eigen_sym", test_eigen_sym)
   call run_test("mat_half_inv", test_mat_half_inv)
   call run_test("eigen_sym_gen", test_eigen_sym_gen)
+  call run_test("cond", test_cond)
 contains
   subroutine test_sort_re()
     complex*16 :: w(3) = (/(0.1d0, 0.3d0), (-0.45d0, 1.1d0), (2.1d0, 0.3d0)/)
@@ -70,7 +71,6 @@ contains
 
     call expect_eq("B^(-1/2)", id_mat(n), matmul(B, matmul(Bmh, Bmh)))
     
-    
   end subroutine test_mat_half_inv
   subroutine test_eigen_sym_gen()
     integer,parameter :: n=3
@@ -85,18 +85,22 @@ contains
     A(3, 3) = (1.1d0, 1.0d0); B(3, 3) = (2.1d0, -0.4d0) 
     AA(:, :) = A(:, :);       BB(:, :) = B(:, :)
     
-    call eigen_sym_gen(AA, BB, w, vs)
+    call eigen_sym(AA, BB, w, vs)
 
     call expect_eq("eigen_sym_gen", &
          matmul(A, vs), &
          matmul(matmul(B, vs), diag_mat(w)))
     call expect_eq("V^BT V=1", id_mat(n), matmul3(transpose(vs), B, vs))
 
-    call expect_true("Re part order", &
-         (real(w(1)) < real(w(2))) .and. (real(w(2)) < real(w(3))) )
-    
+    call expect_true("Re part order", all((/ (real(w(i)) < real(w(i+1)), i=1,n-1 )/)))
     call expect_eq("w(1)", w(3), (6.43614712d0, -0.8792356d0), 10.0d0**(-9.0))
     
   end subroutine test_eigen_sym_gen
-  
+  subroutine test_cond()
+    call expect_eq("cond_int", 3, cond(.true., 3, 1))
+    call expect_eq("cond_int", 1, cond(.false., 3, 1))
+    call expect_eq("cond_double", 1.1d0, cond(.true., 1.1d0, 1.2d0))
+    call expect_eq("cond_complex", (1.1d0, 0.1d0), &
+         cond(.false., (1.1d0, 0.0d0), (1.1d0, 0.1d0)))
+  end subroutine test_cond
 end program main

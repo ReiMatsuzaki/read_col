@@ -3,7 +3,7 @@ program main
   use Mod_SymVec
   use Mod_UnitTest
   implicit none
-!  integer, parameter :: ifile = 3
+  !  integer, parameter :: ifile = 3
   type(IntIn) int_in
 
   call IntIn_new_read(int_in, 5, .false.)
@@ -30,10 +30,10 @@ contains
     open(unit=ifile, file='test_symvec.dat')
     call SymVec_write(vec, ifile)
     close(ifile)
+    
     open(unit=ifile, file='test_symvec.dat')
     call SymVec_new_read(vec2, ifile)
     close(ifile)
-
 
     call SymVec_get(vec2, 1, 1, v)
     call Expect_Eq("vec2(1,1)", v, (1.0d0, 0.0d0))
@@ -42,7 +42,6 @@ contains
     call Expect_Eq("vec2(1,1)", v, (3.0d0, 2.0d0))    
     
   end subroutine test_SymVec
-
 end program main
 !subroutine practice_proj_wave(int_in)
 !  type(int_in), intent(in) :: int_in

@@ -1,0 +1,6 @@
+&solve_1e
+isym=1
+num_eig=1
+aoints_path="AOINTS"
+dat_path="solve_1e.dat"
+/

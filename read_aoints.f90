@@ -60,7 +60,6 @@ contains
             num_isym(isym_iblock(iblock)) * &
             num_isym(jsym_iblock(iblock))
     end do
-    
 
     ! memory allocation
     allocate(this % val(num_val))
@@ -86,11 +85,7 @@ contains
     this % num_isym(:) = num_isym(:)
 
     ! iblock_ijsym
-    do isym = 1, num_sym
-       do jsym = 1, num_sym
-          this % iblock_ijsym(isym, jsym) = 0
-       end do
-    end do
+    this % iblock_ijsym(:, :) = 0
     do iblock = 1, num_block
        isym = isym_iblock(iblock)
        jsym = jsym_iblock(iblock)
@@ -107,64 +102,88 @@ contains
     deallocate(this % num_isym)
     deallocate(this % iblock_ijsym)
   end subroutine SymBlockMat_delete
-  integer function SymBlockMat_index(this, isym, jsym, i, j) result(res)
-    type(SymBlockMat) this
-    integer, intent(in)    :: isym, jsym, i, j
-    res = this % offset_iblock(this % iblock_ijsym(isym, jsym)) + &
+
+  ! ==== Basic ====
+  function SymBlockMat_index(this, isym, jsym, i, j)
+    type(SymBlockMat), intent(in) ::this
+    integer, intent(in)           :: isym, jsym, i, j
+    integer :: SymBlockMat_index
+    SymBlockMat_index = this % offset_iblock(this % iblock_ijsym(isym, jsym)) + &
          (j-1) * this % num_isym(jsym) + (i-1) + 1
   end function SymBlockMat_index
-  subroutine SymBlockMat_set(this, isym, jsym, i, j, val)
+  function SymBlockMat_exist_block(this, isym, jsym)
+    type(SymBlockMat), intent(in) :: this
+    integer, intent(in) :: isym, jsym
+    logical SymBlockMat_exist_block, res
+    res = (this % iblock_ijsym(isym, jsym) .ne. 0)
+    SymBlockMat_exist_block = res
+  end function SymBlockMat_exist_block
+  subroutine SymBlockMat_check_block(this, isym, jsym, label)
+    type(SymBlockMat), intent(in) :: this
+    integer, intent(in)           :: isym, jsym
+    character(*), intent(in)      :: label
+    
+    if(.not. SymBlockMat_exist_block(this, isym, jsym)) then
+       write(*, *) "Error"
+       write(*, *) "Failed to find block matrix", isym, jsym
+       write(*, *) label
+       stop
+    end if
+
+  end subroutine SymBlockMat_check_block
+  
+  ! ==== Accessor ====
+  subroutine SymBlockMat_set_element(this, isym, jsym, i, j, val)
     type(SymBlockMat)      :: this
     integer, intent(in)    :: isym, jsym, i, j
     complex*16, intent(in) :: val
     this % val(SymBlockMat_index(this, isym, jsym, i, j)) = val
-  end subroutine SymBlockMat_set
-  subroutine SymBlockMat_get(this, isym, jsym, i, j, res)
-    type(SymBlockMat) this
-    integer, intent(in) :: isym, jsym, i, j
-    complex*16, intent(out) :: res
-    res = this % val(SymBlockMat_index(this, isym, jsym, i, j))
-  end subroutine SymBlockMat_get
-  subroutine SymBlockMat_get_block_size(this, isym, jsym, num_i, num_j, have_val)
-    type(SymBlockMat) :: this
-    integer, intent(in) :: isym
-    integer, intent(in) :: jsym
-    integer, intent(out) :: num_i
-    integer, intent(out) :: num_j
-    logical, intent(out) :: have_val
-    integer iblock
+  end subroutine SymBlockMat_set_element
+  subroutine SymBlockMat_set_block(this, isym, jsym, mat)
+    type(SymBlockMat)      :: this
+    integer, intent(in)    :: isym, jsym
+    complex*16, intent(in) :: mat(:, :)
+    integer :: iblock, idx1, idx2, num, numij(2)
 
-    iblock = this % iblock_ijsym(isym, jsym)
-    if(iblock .eq. 0) then
-       num_i = 0
-       num_j = 0
-       have_val = .false.
-    else
-       num_i = this % num_isym(isym)
-       num_j = this % num_isym(jsym)
-       have_val = .true.
-    end if
-    
-  end subroutine SymBlockMat_get_block_size
-  subroutine SymBlockMat_get_as_array(this, isym, jsym, mat, have_val)
-    type(SymBlockMat), intent(in) :: this
-    integer, intent(in) :: isym, jsym
-    complex*16, intent(out) :: mat(:, :)
-    logical, intent(out)    :: have_val
-    integer :: num_i, num_j, iblock, idx1, idx2
-
-    call SymBlockMat_get_block_size(this, isym, jsym, num_i, num_j, have_val)
-
-    if(.not. have_val) then
-       return
-    end if
+    call SymBlockMat_check_block(this, isym, jsym, "SymBlockMat_set_block")
 
     iblock = this % iblock_ijsym(isym, jsym)
     idx1 = this % offset_iblock(iblock)
     idx2 = this % offset_iblock(iblock + 1)
-    mat(:, :) = reshape(this % val(idx1+1 : idx2), (/num_i, num_j/))
+    numij = SymBlockMat_block_size(this, isym, jsym)
+    num = numij(1) * numij(2)
+    this % val(idx1+1:idx2) = reshape(mat,(/num/))
     
-  end subroutine SymBlockMat_get_as_array
+  end subroutine SymBlockMat_set_block
+  function SymBlockMat_element(this, isym, jsym, i, j)
+    type(SymBlockMat), intent(in) :: this
+    integer, intent(in) :: isym, jsym, i, j
+    complex*16 :: SymBlockMat_element
+    SymBlockMat_element = this % val(SymBlockMat_index(this, isym, jsym, i, j))
+  end function SymBlockMat_element
+  function SymBlockMat_block_size(this, isym, jsym)
+    type(SymBlockMat), intent(in) :: this
+    integer, intent(in) :: isym, jsym
+    integer :: SymBlockMat_block_size(2)
+
+    call SymBlockMat_check_block(this, isym, jsym, "SymBlockMat_block_size")
+
+    SymBlockMat_block_size(:) = (/this % num_isym(isym), this % num_isym(jsym) /)
+    
+  end function SymBlockMat_block_size
+  subroutine SymBlockMat_block(this, isym, jsym, res)
+    type(SymBlockMat) this
+    integer, intent(in) :: isym, jsym
+    integer :: iblock, idx1, idx2, num(2)
+    complex*16 :: res(:, :)
+    
+    iblock = this % iblock_ijsym(isym, jsym)
+    idx1 = this % offset_iblock(iblock)
+    idx2 = this % offset_iblock(iblock + 1)
+    num = SymBlockMat_block_size(this, isym, jsym)
+    res(:, :) = reshape(this % val(idx1+1 : idx2), num)
+         
+  end subroutine SymBlockMat_block
   subroutine SymBlockMat_new_read(this, ifile)
     type(SymBlockMat)   :: this
     integer, intent(in) :: ifile
@@ -180,11 +199,7 @@ contains
     integer, allocatable ::  isym_iblock(:)
     integer, parameter ::  mask1 =  "000007FF"X
 
-    ! call SymBlockMat_show(this)
-
-    do i_sym = 1, num_sym_u
-       num_isym(i_sym) = 0
-    end do
+    num_isym(:) = 0
 
     iblk = 0
     num_sym = 0
@@ -234,8 +249,8 @@ contains
           i = iand(ishft(lbli(int), -15), mask1)
           isym = ishft(lbli(int), -26)
           val = spi(int)
-          call SymBlockMat_set(this, isym, isym, i, j, val)
-          call SymBlockMat_set(this, isym, isym, j, i, val)
+          call SymBlockMat_set_element(this, isym, isym, i, j, val)
+          call SymBlockMat_set_element(this, isym, isym, j, i, val)
        end do
     end do
     
@@ -398,6 +413,23 @@ contains
          (this % mnl(iso), iso=1, this % isfr), &
          (this % kstar(iso), iso=1, this % isfr), &
          this % zscale
+
+    write(*, *) &
+         this % blabel, &
+         this % repfunc, &
+         this % nst, &
+         (this % nd(ist), ist=1, this % nst), &
+         (this % ityp(ist), ist=1, this % nst), &
+         (this % nso(ist), ist=1, this % nst), &
+         this % ns, &
+         (this % mtyp(is), is=1, this % ns), &
+         this % isfr, &
+         (this % ms(iso), iso=1, this % isfr), &
+         (this % mnl(iso), iso=1, this % isfr), &
+         (this % kstar(iso), iso=1, this % isfr), &
+         this % zscale
+
+    write(*, *) "End"
 
   end subroutine AoInts_read_header
   subroutine AoInts_new_read(this, ifile)

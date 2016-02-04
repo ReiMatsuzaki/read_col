@@ -1,25 +1,37 @@
 module Mod_LinearAlgebra
   implicit none
+  interface eigen_sym
+     module procedure eigen_sym_id, eigen_sym_gen
+  end interface eigen_sym
 contains
   ! ==== basic linear algebra ====
   function matmul3(A, B, C)
     complex*16, intent(in) :: A(:, :), B(:, :), C(:, :)
     complex*16 :: matmul3(size(A, 1), size(C, 2))
-    integer i, j, k, l
+    complex*16 :: BC(size(B, 1), size(C, 2))
+    integer i, j, k
     
     if(size(A, 2) .ne. size(B, 1) .or. size(B, 2) .ne. size(C, 1)) then
        write(*, *) "size mismatch in matmul3"
        stop
     end if
 
+    BC(:, :) = (0.0d0, 0.0d0)
+    do i = 1, size(B, 1)
+       do j = 1, size(C, 2)
+          BC(i, j) = (0.0d0, 0.0d0)
+          do k = 1, size(C, 1)
+             BC(i, j) = BC(i, j)  + B(i, k) * C(k, j)
+          end do
+       end do
+    end do
+
     matmul3(:, :) = (0.0d0, 0.0d0)
     do i = 1, size(A, 1)
        do j = 1, size(C, 2)
           matmul3(i, j) = (0.0d0, 0.0d0)
           do k = 1, size(A, 2)
-             do l = 1, size(B, 2)
-                matmul3(i, j) = matmul3(i, j) + A(i, k) * B(k, l) * C(l, j)
-             end do
+             matmul3(i, j) = matmul3(i, j) + A(i, k) * BC(k, j)
           end do
        end do
     end do
@@ -81,7 +93,7 @@ contains
     end do
     
   end subroutine sort_re
-  subroutine eigen_sym(A, W, V)
+  subroutine eigen_sym_id(A, W, V)
     use f95_lapack, only : LA_GEEV
     complex*16, intent(inout) :: A(:, :)
     complex*16, intent(out)   :: W(size(A, 1))
@@ -99,7 +111,7 @@ contains
        V(:, j) = Vr(:, j) / sqrt(VV(j, j))
     end do
         
-  end subroutine eigen_sym
+  end subroutine eigen_sym_id
   ! Solve generalized eigen values problem
   !    A UL = diag(W) B UL
   !

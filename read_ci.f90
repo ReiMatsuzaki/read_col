@@ -16,10 +16,13 @@ module Mod_CI
      integer   :: ncidim
      integer   :: nstate
      complex*16, allocatable :: eig(:)
+!     complex*16              :: ene0
+     complex*16, allocatable :: d_ene(:)
+     complex*16, allocatable :: tdm_l(:)
+     complex*16, allocatable :: tdm_v(:)
      complex*16, allocatable :: coef(:,:)
      integer, allocatable :: num_mo_sym(:)
      type(CSF), allocatable :: csf(:)
-
      integer, allocatable :: mo_offset(:)
   end type CI
   
@@ -91,17 +94,40 @@ contains
     write(*, *) "nstate:   ", this % nstate
 
     allocate(this % eig(nstate))
+    allocate(this % d_ene(nstate))
+    allocate(this % tdm_l(nstate))
+    allocate(this % tdm_v(nstate))
     allocate(this % coef(nstate,  ncidim))
     allocate(this % csf(ncidim))
         
     do n = 1, this % nstate
        read(ifile) this % eig(n), this % coef(n,:)
        !       write(*, *) this % eig(n)
+    end do    
+    close(unit=ifile)    
+  end subroutine CI_new_read_civec
+  subroutine CI_set_read_phoxsec(this, ifile)
+    type(CI), intent(inout) :: this
+    integer, intent(in)  :: ifile
+    character(100) dum
+    complex*16 :: ene, tdm_l, tdm_v
+    integer i, ii
+    
+    do i = 1, 5
+       read(ifile, *) dum
+    end do
+
+    read(ifile, '(I8,1P,6D12.4)') i, ene, tdm_l, tdm_v
+!    this % ene0 = ene
+    read(ifile, *) dum
+    do i = 1, this % nstate
+       read(ifile, '(I4,F12.7,5F12.8)') ii, ene, tdm_l, tdm_v
+       this % d_ene(i) = ene
+       this % tdm_l(i) = tdm_l
+       this % tdm_v(i) = tdm_v
     end do
     
-    close(unit=ifile)
-    
-  end subroutine CI_new_read_civec
+  end subroutine CI_set_read_phoxsec
   subroutine CI_set_read_csf(this, ifile)
     type(CI) this
     integer ifile

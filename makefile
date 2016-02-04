@@ -8,11 +8,21 @@ LIBLAPACK= -lblas -llapack -llapack95
 %.o: %.f90
 	${FC} ${FFLAG} ${MODS} -c $< -o $@
 
+vector.f90: vector.f90t
+	cat vector.f90t| sed s/XXXTypeXXX/integer/g | sed s/XXXNameXXX/I/g >  vector.f90
+	cat vector.f90t| sed s/XXXTypeXXX/complex*16/g | sed s/XXXNameXXX/Z/g >> vector.f90
+	cat vector.f90t| sed s/XXXTypeXXX/real*8/g | sed s/XXXNameXXX/D/g >> vector.f90
+
 # ==== Binary ====
-solve_1e: utils.o read_aoints.o solve_1e.o
+proj_one: utils.o read_aoints.o read_mocoef.o read_ci.o proj_one.o
+	${FC} ${FFLAG} $^ ${LIBLAPACK} -o $@
+run_proj_one: proj_one
+	cd test/out/ && ../../proj_one proj_one.in
+
+solve_1e: utils.o lalgebra.o read_aoints.o solve_1e.o
 	${FC} ${FFLAG} $^ ${LIBLAPACK} -o $@
 run_solve_1e: solve_1e
-	cd test/out2 && ../../solve_1e
+	cd test/out2 && ../../solve_1e solve_1e.in
 
 gto_vec: utils.o read_intin.o gto_vec.o 
 	${FC} ${FFLAG} $^ ${LIBLAPACK} -o $@
@@ -21,6 +31,10 @@ run_gto_vec: gto_vec
 
 
 # ==== Unit Tests ====
+test_vector: utest.o vector.o test_vector.o
+	${FC} ${FFLAG} $^ -o $@
+	./test_vector
+
 test_utils: utest.o utils.o lalgebra.o test_utils.o
 	${FC} ${FFLAG} $^ ${LIBLAPACK} -o $@
 check_utils: test_utils

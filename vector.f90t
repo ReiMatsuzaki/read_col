@@ -1,0 +1,51 @@
+module Mod_VectorXXXNameXXX
+  type VectorXXXNameXXX
+     XXXTypeXXX, allocatable :: data(:)
+     integer :: num
+  end type VectorXXXNameXXX
+contains
+  function VectorXXXNameXXX_new(num)
+    type(VectorXXXNameXXX) VectorXXXNameXXX_new
+    integer, intent(in), optional :: num
+    if(present(num)) then
+       allocate(VectorXXXNameXXX_new % data(num))
+    else
+       allocate(VectorXXXNameXXX_new % data(1))
+    end if
+    VectorXXXNameXXX_new % num = 0
+  end function VectorXXXNameXXX_new
+  subroutine VectorXXXNameXXX_append(this, x)
+    type(VectorXXXNameXXX), intent(inout) :: this
+    integer num_new
+    XXXTypeXXX, intent(in) :: x
+    XXXTypeXXX, allocatable :: tmp(:)
+    if(size(this % data) == this % num) then
+       num_new = this % num *2
+       allocate(tmp(num_new))
+       tmp(1:this % num) = this % data(:)
+       deallocate(this % data)
+       allocate(this % data(num_new))
+       this % data(:) = tmp(:)
+    end if
+
+    this % data(this % num + 1) = x
+    this % num = this % num + 1
+    
+  end subroutine VectorXXXNameXXX_append
+  function VectorXXXNameXXX_at(this, i)
+    type(VectorXXXNameXXX) :: this 
+    integer, intent(in) :: i
+    XXXTypeXXX :: VectorXXXNameXXX_at
+    VectorXXXNameXXX_at = this % data(i)
+  end function VectorXXXNameXXX_at
+  function VectorXXXNameXXX_size(this)
+    type(VectorXXXNameXXX) :: this 
+    integer VectorXXXNameXXX_size
+    VectorXXXNameXXX_size = this % num
+  end function VectorXXXNameXXX_size
+!  function VectorXXXNameXXX_array(this)
+!    type(VectorXXXNameXXX) :: this
+!    XXXTypeXXX :: VectorXXXNameXXX_array(this % num)
+!    VectorXXXNameXXX_array(:) = this % data(1:this % num)
+!  end function VectorXXXNameXXX_array
+end module Mod_VectorXXXNameXXX
