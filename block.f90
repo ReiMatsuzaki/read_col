@@ -30,13 +30,18 @@ contains
     
   end subroutine BlockVec_new
   subroutine BlockVec_delete(this)
-    type(BlockVec), intent(out) :: this
+    type(BlockVec), intent(inout) :: this
     deallocate(this % offset_ist)
     deallocate(this % num_ist)
     deallocate(this % val)
   end subroutine BlockVec_delete
 
   ! ==== Accessor ====
+  function BlockVec_num_sym(this)
+    type(BlockVec), intent(in) :: this
+    integer :: BlockVec_num_sym
+    BlockVec_num_sym = size(this % offset_ist)
+  end function BlockVec_num_sym
   function BlockVec_index(this, ist, i)
     type(BlockVec), intent(in) :: this
     integer, intent(in)      :: ist, i
@@ -47,7 +52,8 @@ contains
     type(BlockVec), intent(in) :: this
     integer, intent(in) :: ist
     integer :: BlockVec_size
-    BlockVec_size = this % offset_ist(ist+1) - this % offset_ist(ist)
+    ! BlockVec_size = this % offset_ist(ist+1) - this % offset_ist(ist)
+    BlockVec_size = this % num_ist(ist)
   end function BlockVec_size
   subroutine BlockVec_set_val(this, ist, i, ele)
     type(BlockVec), intent(inout) :: this
@@ -276,6 +282,11 @@ contains
   end subroutine BlockMat_check_block
   
   ! ==== Accessor ====
+  function BlockMat_num_sym(this)
+    type(BlockMat), intent(in) :: this
+    integer :: BlockMat_num_sym
+    BlockMat_num_sym = size(this % num_isym(:))
+  end function BlockMat_num_sym
   function BlockMat_block_size(this, isym, jsym)
     type(BlockMat), intent(in) :: this
     integer, intent(in) :: isym, jsym

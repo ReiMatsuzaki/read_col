@@ -37,6 +37,7 @@ contains
     call BlockVec_new_read(vec2, ifile)
     close(ifile)
 
+    call expect_eq("num_sym", 3, BlockVec_num_sym(vec2))
     call expect_eq("size(vec(1))", 3, BlockVec_size(vec2, 1))
     call expect_eq("vec(1)(2)", (1.0d0, 1.0d0), BlockVec_val(vec2, 1, 2))
     call Expect_Eq("vec2(2)(2)", (2.0d0, 1.0d0), BlockVec_val(vec2, 2, 2))
@@ -55,7 +56,6 @@ contains
     integer :: isym_iblock(5) = (/1, 2, 3, 4, 1/)
     integer :: jsym_iblock(5) = (/1, 2, 3, 4, 2/)
     integer num_i, num_j, num_ij(2)
-    logical have_val
 
     call BlockMat_new(mat, num_isym, isym_iblock, jsym_iblock)
 
@@ -86,14 +86,15 @@ contains
 
     num_ij = BlockMat_block_size(mat, 1, 1)
     num_i = num_ij(1); num_j = num_ij(2)
-    call expect_true("block size(1,1)", have_val)
+    call expect_eq("num sym", 4, BlockMat_num_sym(mat))
+    call expect_true("block size(1,1)", BlockMat_exist_block(mat, 1, 1))
     call Expect_Eq("block size(1,1)", 2, num_i)
     call Expect_Eq("block size(1,1)", 2, num_j)
 
     call expect_false("Block(1,3)", BlockMat_exist_block(mat, 1, 3))
 
     num_ij = BlockMat_block_size(mat, 1, 2)
-    call expect_true("block size(1,2)", have_val)
+    call expect_true("block size(1,2)", BlockMat_exist_block(mat, 1, 1))
     call Expect_Eq("block size(1,2)", 2, num_ij(1))
     call Expect_Eq("block size(1,2)", 1, num_ij(2))
     

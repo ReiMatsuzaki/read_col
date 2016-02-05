@@ -19,11 +19,11 @@ program main
   do i = 1, ao % nst
      n_ist(i) = ao % nso(i)
   end do
-
-  print *, "mo coef new"
+  
+  open(unit = ifile, file='MOCOEF')
   call MOCoef_new(mo, n_ist)
-  print *, "mo coef set read"
-  call MOCoef_set_read(mo)
+  call MOCoef_set_read(mo, ifile)
+  close(unit = ifile)
 
   call expect_eq("MO(1,1)(1,1), ", (0.702767d0, 0.0d0), &
        BlockMat_val(mo % mo_coef, 1, 1, 1, 1), eps)

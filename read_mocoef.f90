@@ -3,100 +3,79 @@ module Mod_MOCoef
   use Mod_BlockVec
   implicit none
   type MOCoef
-     integer nst         ! number of symmetry
-     integer, allocatable    :: n_ist(:)    ! # of orbital of symmetry ist
-     complex*16, allocatable :: coef(:)  ! MO coefficient
-     complex*16, allocatable :: eig(:)   ! orbital energy
+!     integer nst         ! number of symmetry
+!     integer, allocatable    :: n_ist(:)    ! # of orbital of symmetry ist
+!     complex*16, allocatable :: coef(:)  ! MO coefficient
+!     complex*16, allocatable :: eig(:)   ! orbital energy
      type(BlockMat) :: mo_coef
      type(BlockVec)   :: mo_eig
   end type MOCoef
 contains
+  ! ==== Constructors ====
   subroutine MOCoef_new(this, n_ist)
     type(MOCoef), intent(inout) :: this
     integer,      intent(in)    :: n_ist(:)
-    integer :: n_coef, n_eig
     integer :: ist
     integer :: isym_iblock(size(n_ist))
     
-    this % nst = size(n_ist)
-    allocate(this % n_ist(this % nst))
-
-    print *, this % nst
-    this % n_ist = n_ist
-    print *, this % n_ist
-
-    n_coef = 0
-    n_eig = 0
-    do ist = 1, this % nst
-       n_coef = n_coef + this % n_ist(ist) ** 2
-       n_eig = n_eig + this % n_ist(ist)
-    end do
-
-    print *, "Allocation:", n_coef, n_eig
-    allocate(this % coef(n_coef))
-    allocate(this % eig(n_eig))
-
     isym_iblock(:) = (/(ist, ist = 1, size(n_ist))/)
     call BlockMat_new(this % mo_coef, n_ist, isym_iblock, isym_iblock)
     call BlockVec_new(this % mo_eig, n_ist)
   end subroutine MOCoef_new
   subroutine MOCoef_delete(this)
     type(MOCoef) this
-    deallocate(this % n_ist)
-    deallocate(this % coef)
-    deallocate(this % eig)
 
     call BlockMat_delete(this % mo_coef)
+    call BlockVec_delete(this % mo_eig)
+    
   end subroutine MOCoef_delete
-  subroutine MOCoef_set_read(this)
+
+  ! ==== Accessor ====
+  function MOCoef_num_sym(this)
+    type(MOCoef), intent(in) :: this
+    integer :: MOCoef_num_sym
+    MOCoef_num_sym = BlockVec_num_sym(this % mo_eig)
+  end function MOCoef_num_sym
+  function MOCoef_size_isym(this, isym)
+    type(MOCoef), intent(in) :: this
+    integer, intent(in)      :: isym
+    integer :: MOCoef_size_isym
+    MOCoef_size_isym = BlockVec_size(this % mo_eig, isym)
+  end function MOCoef_size_isym
+  
+  ! ==== I/O ====
+  subroutine MOCoef_set_read(this, ifile)
     type(MOCoef) this
-    integer ifile
+    integer, intent(in) ::  ifile
     real*8 fmt(4)
     integer ist, k, j
     integer nn
-    integer ic_max, ic_min, i_start, i_fin
+    complex*16, allocatable :: vals(:)
 
-    ifile = 13
-    open(unit = ifile, file='MOCOEF')
     read(ifile, '(10A8)') fmt
-
-    ic_max = 0
-    do ist = 1, this % nst
+    do ist = 1, MOCoef_num_sym(this)
        
-       nn = this % n_ist(ist)
-       ic_min = ic_max + 1
-       ic_max = ic_max + nn * nn
-       
-       i_start = ic_min
-       i_fin   = ic_min + nn - 1
+       nn = MOCoef_size_isym(this, ist)
+       allocate(vals(nn))
        do k = 1, nn
-!          write(*,'(4I)') ist, k, i_start, i_fin
-          read(ifile, fmt)  (this % coef(j), j = i_start, i_fin)
-          !          write(*,*)  (this % coef(j), j = i_start, i_fin)
+          read(ifile, fmt) (vals(j), j = 1, nn)
           do j = 1, nn
-             call BlockMat_set_val(this % mo_coef, ist, ist, j, k, &
-                  this % coef(j+i_start-1))
+             call BlockMat_set_val(this % mo_coef, ist, ist, j, k, vals(j))
           end do
-          i_start = i_fin + 1
-          i_fin = i_fin + nn
-
        end do
+       deallocate(vals)
     end do
 
-    ic_max = 0
-    do ist = 1, this % nst
-       nn = this % n_ist(ist)
-       ic_min = ic_max + 1
-       ic_max = ic_max + nn
-!       print *,  ist, ic_min, ic_max
-       read(ifile, fmt) (this % eig(j), j = ic_min, ic_max)
+
+    do ist = 1, MOCoef_num_sym(this)
+       nn = MOCoef_size_isym(this, ist)
+       allocate(vals(nn))
+       read(ifile, fmt) (vals(j), j = 1, nn)
        do j = 1, nn
-          call BlockVec_set_val(this % mo_eig, ist, j, this % eig(ic_min+j-1))
+          call BlockVec_set_val(this % mo_eig, ist, j, vals(j))
        end do
-!       write(*,*)  (this % eig(j), j = ic_min, ic_max)
+       deallocate(vals)
     end do
-
-    close(unit = ifile)
     
   end subroutine MOCoef_set_read
 end module Mod_MOCoef
