@@ -14,9 +14,9 @@ vector.f90: vector.f90t
 	cat vector.f90t| sed s/XXXTypeXXX/real*8/g | sed s/XXXNameXXX/D/g >> vector.f90
 
 # ==== Binary ====
-proj_one: utils.o read_aoints.o read_mocoef.o read_ci.o proj_one.o
+proj_one: utils.o lalgebra.o read_aoints.o read_mocoef.o read_ci.o proj_one.o run_proj_one.o
 	${FC} ${FFLAG} $^ ${LIBLAPACK} -o $@
-run_proj_one: proj_one
+check_proj_one: proj_one
 	cd test/out/ && ../../proj_one proj_one.in
 
 solve_1e: utils.o lalgebra.o read_aoints.o solve_1e.o
@@ -50,7 +50,7 @@ test_read_intin: utils.o utest.o read_intin.o test_read_intin.o
 check_read_intin: test_read_intin
 	cd test/out3 && ../../test_read_intin < int.in 
 
-test_read_mocoef:  read_mocoef.o read_aoints.o test_read_mocoef.o
+test_read_mocoef:  utest.o utils.o read_intin.o read_aoints.o read_mocoef.o test_read_mocoef.o
 	${FC} ${FFLAG} $^ -o $@
 check_read_mocoef: test_read_mocoef
 	cd test/out && ../../test_read_mocoef

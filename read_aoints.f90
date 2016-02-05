@@ -68,6 +68,7 @@ contains
     allocate(this % jsym_iblock(num_block))
     allocate(this % num_isym(num_sym))
     allocate(this % iblock_ijsym(num_sym, num_sym))
+    this % val = (7.77d0, 7.77d0)
 
     ! offset_iblock
     this % offset_iblock(1) = 0

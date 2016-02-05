@@ -1,6 +1,6 @@
 module Mod_UnitTest
   implicit none
-  real*8, parameter :: eps_double_prec = 1.0d0**(-14.0d0)
+  real*8, parameter :: eps_double_prec = 10.0d0**(-14.0d0)
   interface expect_eq
      module procedure &
           expect_eq_int, &

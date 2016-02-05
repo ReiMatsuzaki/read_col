@@ -13,7 +13,7 @@ contains
 
     integer ist ! index for symmetry
     integer nst ! number of symmetry
-    
+
     nst = size(num_ist)
     this % nst = nst
     allocate(this % offset_ist(nst))
@@ -50,6 +50,14 @@ contains
     call SymVec_index(this, ist, i, idx)
     v = this % val(idx)
   end subroutine SymVec_get
+  function SymVec_at(this, ist, i)
+    type(SymVec), intent(in) :: this
+    integer, intent(in)         :: ist, i
+    complex*16 :: SymVec_at
+    integer :: idx
+    call SymVec_index(this, ist, i, idx)
+    SymVec_at = this % val(idx)
+  end function SymVec_at
   subroutine SymVec_show(this)
     type(SymVec), intent(in) :: this
     integer    :: ist, i

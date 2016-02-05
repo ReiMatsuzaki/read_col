@@ -15,6 +15,7 @@ module Mod_CI
   type CI
      integer   :: ncidim
      integer   :: nstate
+     integer   :: n_ele
      complex*16, allocatable :: eig(:)
 !     complex*16              :: ene0
      complex*16, allocatable :: d_ene(:)
@@ -182,6 +183,7 @@ contains
 
     read(ifile, *) label
     read(ifile, *) n_ele
+    this % n_ele = n_ele
     write(*, *) "label: ", label
     write(*, *) "n_ele", n_ele
     allocate(mo(n_ele))
