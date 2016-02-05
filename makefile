@@ -32,7 +32,7 @@ run_gto_vec: gto_vec
 
 # ==== Unit Tests ====
 # ---- general ----
-test_block: utest.o block.o test_block.o
+test_block: utils.o utest.o block.o test_block.o
 	${FC} ${FFLAG} $^ -o $@
 check_block: test_block
 	./test_block

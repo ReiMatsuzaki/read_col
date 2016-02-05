@@ -7,6 +7,8 @@ program main
   
   call run_test("BlockMat", test_BlockMat)
   call run_test("BlockMat_get_block", test_BlockMat_get_block)
+
+  ! call run_test("block_matmul", test_block_matmul)
   
 contains
   subroutine test_BlockVec()
@@ -133,5 +135,38 @@ contains
     call Expect_Eq("m12_21", (5.0d0, 0.1d0), m12(2, 1))
     
   end subroutine test_BlockMat_get_block
+  subroutine test_block_matmul()
+    use Mod_BlockLinearAlgebra
+    use Mod_Utils
+    type(BlockVec) :: a, c
+    type(BlockMat) :: B
+    integer :: ist(3) = (/2, 1, 3/)
+    complex*16 :: a1(2)
+    complex*16 :: a2(1)
+    complex*16 :: a3(3)
+    complex*16 :: b11(2, 2)
+    complex*16 :: b22(1, 1)
+    complex*16 :: b33(3, 3) 
 
+    call c_random(a1)
+    call c_random(a2)
+    call c_random(a3)
+    call c_random(b11)
+    call c_random(b22)
+    call c_random(b33)    
+    
+    call BlockVec_new(a, ist)
+    call BlockVec_set_block(a, 1, a1)
+    call BlockVec_set_block(a, 2, a2)
+    call BlockVec_set_block(a, 3, a3)
+    
+    call BlockMat_new(B, ist, (/1, 2, 3/), (/1, 2, 3/))
+    call BlockMat_set_block(B, 1, 1, b11)
+    call BlockMat_set_block(B, 2, 2, b22)
+    call BlockMat_set_block(B, 3, 3, b33)
+
+    call block_matmul_normal(B, a, c)
+    call BlockVec_show(c)
+    
+  end subroutine test_block_matmul
 end program main

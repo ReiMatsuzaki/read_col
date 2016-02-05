@@ -113,16 +113,23 @@ contains
     character(100) dum
     complex*16 :: ene, tdm_l, tdm_v
     integer i, ii
+
+    this % d_ene(:) = (7.77d0, 7.77d0)
+    this % tdm_l(:) = (7.77d0, 7.77d0)
+    this % tdm_v(:) = (7.77d0, 7.77d0)
     
     do i = 1, 5
        read(ifile, *) dum
     end do
 
     read(ifile, '(I8,1P,6D12.4)') i, ene, tdm_l, tdm_v
-!    this % ene0 = ene
-    read(ifile, *) dum
+    write(*, '(I8,1P,6D12.4)') i, ene, tdm_l, tdm_v
+
+    ! below one read statement is for skip one line
+    read(ifile, '(I4,F12.7,5F12.8)') ii, ene, tdm_l, tdm_v
     do i = 1, this % nstate
        read(ifile, '(I4,F12.7,5F12.8)') ii, ene, tdm_l, tdm_v
+!       write(*, *) i, ii, ene
        this % d_ene(i) = ene
        this % tdm_l(i) = tdm_l
        this % tdm_v(i) = tdm_v

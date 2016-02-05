@@ -177,11 +177,29 @@ contains
     deallocate(eigs); deallocate(vecs)
     
   end subroutine diag_one_e
-  subroutine trans_symvec(symvec_in, symvec_out)
+  subroutine trans_symvec(vec_in, trans_mat, vec_out)
     ! transform gto basis symmetry separated vector to MO basis
-    type(SymVec), intent(in) :: symvec_in
-    type(SymVec), intent(out) :: symvec_out
+    type(BlockVec), intent(in) :: vec_in
+    type(BlockMat), intent(in) :: trans_mat
+    type(BlockVec), intent(out) :: vec_out
+    integer :: isym, num
+    complex*16, allocatable :: mat(:, :)
+    complex*16, allocatable :: vin(:), vout(:)
 
+    call BlockVec_new_copy(vec_out, vec_in)
+
+    do isym = BlockVec_num_sym(vec_in)
+       num = BlockVec_size(vec_in, isym)
+       
+       allocate(mat(num, num)); allocate(vin(num)); allocate(vout(num))
+       
+       call BlockMat_get_block(trans_mat, isym, isym, mat)
+       call BlockVec_get_block(vec_in, isym, vin)
+       vout(:) = matmul(mat(:, :), vin(:))
+       call BlockVec_set_block(vec_out, isym, vout)
+       
+       deallocate(mat); deallocate(vin); deallocate(vout);
+    end do
     
     
   end subroutine trans_symvec

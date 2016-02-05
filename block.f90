@@ -29,6 +29,17 @@ contains
     this % num_ist(:) = num_ist(:)
     
   end subroutine BlockVec_new
+  subroutine BlockVec_new_copy(this, from)
+    type(BlockVec), intent(out)  :: this
+    type(BlockVec), intent(in) :: from
+    call BlockVec_new(this, from % num_ist)
+
+    this % nst           = from % nst
+    this % offset_ist(:) = from % offset_ist(:)
+    this % num_ist(:)    = from % num_ist(:)
+    this % val(:)        = from % val(:)
+    
+  end subroutine BlockVec_new_copy
   subroutine BlockVec_delete(this)
     type(BlockVec), intent(inout) :: this
     deallocate(this % offset_ist)
@@ -430,5 +441,66 @@ contains
     end do
     
   end subroutine BlockMat_set_read
-    
+
 end module Mod_BlockMat
+
+module Mod_BlockLinearAlgebra
+  use Mod_BlockVec
+  use Mod_BlockMat
+  implicit none
+contains
+  function block_matmul(M, v, t)
+    type(BlockMat), intent(in) :: M
+    type(BlockVec), intent(in) :: v
+    character, optional :: t
+    type(BlockVec) :: block_matmul
+
+    if(BlockVec_num_sym(v) /= BlockMat_num_sym(M)) then
+       write(*, *) "block_matmul"
+       write(*, *) "number of symmetry is not match"
+       stop
+    end if
+
+    if((t .eq. 'T') .or. (t .eq. 't')) then
+       call block_matmul_normal(M, v, block_matmul)
+    end if
+    
+  end function block_matmul
+  subroutine block_matmul_normal(M, v, res)
+    type(BlockMat), intent(in) :: M
+    type(BlockVec), intent(in) :: v
+    type(BlockVec), intent(out) :: res
+    integer iblock, isym, jsym, num_sym, idx0, idx1, ni, nj, idx2, idx3
+
+    num_sym = BlockVec_num_sym(v)
+    call BlockVec_new_copy(res, v)
+
+    res % val(:) = (0.0d0, 0.0d0)
+
+    do iblock = 1, size(M % isym_iblock)
+       isym = M % isym_iblock(iblock)
+       jsym = M % jsym_iblock(iblock)
+       ni = M % num_isym(isym)
+       nj = M % num_isym(jsym)
+       idx0 = M % offset_iblock(iblock) + 1
+       idx1 = M % offset_iblock(iblock+1)
+       idx2 = v % offset_ist(iblock) + 1
+       idx3 = v % offset_ist(iblock+1)
+!       do i = 1, ni
+!          res % val(res % offset_ist(isym)+i) = res % val(res % offset_ist(isym)+i) &
+!               + M % val(M % offset_iblock(iblock) + )
+!          res % offset_ist(isym) + 1, res % offset_ist(isym+1)
+!          do j = 1, nj
+!             res % val(i) = res % val(i)
+!          end do
+!       end do
+       call BlockVec_set_block(res, isym, &
+            matmul(reshape(M % val(idx0:idx1), (/ni, nj/)), v % val(idx2:idx3)))
+    end do
+  end subroutine block_matmul_normal
+!  subroutine block_matmul_transpose(M, v, res)
+!    type(BlockMat), intent(in) :: M
+!    type(BlockVec), intent(in) :: v
+!    type(BlockVec), intent(out) :: res    
+!  end subroutine block_matmul_transpose
+end module Mod_BlockLinearAlgebra

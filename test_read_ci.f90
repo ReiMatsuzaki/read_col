@@ -49,8 +49,8 @@ program main
        (0.12d0, 0.23d0), &
        wave_func % tdm_l(2))
   call expect_eq("tdm_v(2)", &
-       (0.23d0, 0.34d0), &
-       wave_func % tdm_l(2))
+       (0.34d0, 0.45d0), &
+       wave_func % tdm_v(2))
   
   csf3 = wave_func % csf(3)
   call expect_eq("csf(3).n_sd", csf3 % n_sd, 2)
