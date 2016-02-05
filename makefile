@@ -31,6 +31,12 @@ run_gto_vec: gto_vec
 
 
 # ==== Unit Tests ====
+# ---- general ----
+test_block: utest.o block.o test_block.o
+	${FC} ${FFLAG} $^ -o $@
+check_block: test_block
+	./test_block
+
 test_vector: utest.o vector.o test_vector.o
 	${FC} ${FFLAG} $^ -o $@
 	./test_vector
@@ -40,17 +46,18 @@ test_utils: utest.o utils.o lalgebra.o test_utils.o
 check_utils: test_utils
 	./test_utils
 
-test_read_aoints:  utest.o read_aoints.o test_read_aoints.o
-	${FC} ${FFLAG} $^ ${LIBLAPACK} -o $@
-check_read_aoints: test_read_aoints
-	cd test/out3 && ../../$< 
-
+# ---- reader ----
 test_read_intin: utils.o utest.o read_intin.o test_read_intin.o
 	${FC} ${FFLAG} $^ -o $@
 check_read_intin: test_read_intin
 	cd test/out3 && ../../test_read_intin < int.in 
 
-test_read_mocoef:  utest.o utils.o read_intin.o read_aoints.o read_mocoef.o test_read_mocoef.o
+test_read_aoints:  utest.o block.o read_aoints.o test_read_aoints.o
+	${FC} ${FFLAG} $^ ${LIBLAPACK} -o $@
+check_read_aoints: test_read_aoints
+	cd test/out3 && ../../$< 
+
+test_read_mocoef:  utest.o block.o utils.o read_intin.o read_aoints.o read_mocoef.o test_read_mocoef.o
 	${FC} ${FFLAG} $^ -o $@
 check_read_mocoef: test_read_mocoef
 	cd test/out && ../../test_read_mocoef

@@ -1,6 +1,6 @@
 module Mod_MOCoef
   use Mod_BlockMat
-  use Mod_SymVec
+  use Mod_BlockVec
   implicit none
   type MOCoef
      integer nst         ! number of symmetry
@@ -8,7 +8,7 @@ module Mod_MOCoef
      complex*16, allocatable :: coef(:)  ! MO coefficient
      complex*16, allocatable :: eig(:)   ! orbital energy
      type(BlockMat) :: mo_coef
-     type(SymVec)   :: mo_eig
+     type(BlockVec)   :: mo_eig
   end type MOCoef
 contains
   subroutine MOCoef_new(this, n_ist)
@@ -38,11 +38,7 @@ contains
 
     isym_iblock(:) = (/(ist, ist = 1, size(n_ist))/)
     call BlockMat_new(this % mo_coef, n_ist, isym_iblock, isym_iblock)
-    write(*, *) ""
-    write(*, *) "symvec_new>>>"
-    call SymVec_new(this % mo_eig, n_ist)
-    write(*, *) "symvec_new<<<"
-    
+    call BlockVec_new(this % mo_eig, n_ist)
   end subroutine MOCoef_new
   subroutine MOCoef_delete(this)
     type(MOCoef) this
@@ -75,12 +71,12 @@ contains
        i_fin   = ic_min + nn - 1
        do k = 1, nn
 !          write(*,'(4I)') ist, k, i_start, i_fin
-          read(ifile, fmt) (this % coef(j), j = i_start, i_fin)
+          read(ifile, fmt)  (this % coef(j), j = i_start, i_fin)
           !          write(*,*)  (this % coef(j), j = i_start, i_fin)
           do j = 1, nn
-             call BlockMat_set_element(this % mo_coef, ist, ist, j, k, &
+             call BlockMat_set_val(this % mo_coef, ist, ist, j, k, &
                   this % coef(j+i_start-1))
-          end do          
+          end do
           i_start = i_fin + 1
           i_fin = i_fin + nn
 
@@ -95,7 +91,7 @@ contains
 !       print *,  ist, ic_min, ic_max
        read(ifile, fmt) (this % eig(j), j = ic_min, ic_max)
        do j = 1, nn
-          call SymVec_set(this % mo_eig, ist, j, this % eig(ic_min+j-1))
+          call BlockVec_set_val(this % mo_eig, ist, j, this % eig(ic_min+j-1))
        end do
 !       write(*,*)  (this % eig(j), j = ic_min, ic_max)
     end do

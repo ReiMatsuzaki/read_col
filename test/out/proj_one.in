@@ -4,4 +4,11 @@ mocoef_path="MOCOEF"
 ciin_path="ci2.in"
 csf_path="CSF"
 /
+&two_e
+spin0=1
+isym0=1
+symvec_path="gto_vec"
+/
+
+
 
