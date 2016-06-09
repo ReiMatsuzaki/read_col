@@ -80,19 +80,6 @@ contains
        call WriteSuccess(label)
     end if
   end subroutine expect_eq_double
-!  subroutine expect_eq_double_near(label, a, b, eps)
-!    real*8 a, b, eps
-!    character(*) label
-!    if(abs(a-b) > eps) then
-!       write(*, *) "Failed: ", label
-!       write(*, *) "   a = ", a
-!       write(*, *) "   b = ", b
-!       call exit(1)
-!       call exit(1)
-!    else
-!       write(*, *) "Success: ", label
-!    end if
-!  end subroutine Expect_Eq_Double_Near
   subroutine expect_eq_complex(label, a, b, epsin)
     complex*16, intent(in)   :: a, b
     character(*), intent(in) :: label
@@ -114,22 +101,6 @@ contains
        call WriteSuccess(label)
     end if
   end subroutine Expect_Eq_Complex
-!  subroutine expect_eq_complex_near(label, a, b, eps)
-!    complex*16 a, b
-!    character(*) label
-!    real*8 eps
-!    if(abs(a-b) > eps) then
-!       call WriteFailed(label)
-!       write(*, *) "   a = ", a
-!       write(*, *) "   b = ", b
-!       write(*, *) "   a-b = ", a-b
-!       write(*, *) "  |a-b|= ", abs(a-b)
-!       write(*, *) "   eps = ", eps
-!       call exit(1)
-!    else
-!       call WriteSuccess(label)
-!    end if
-!  end subroutine Expect_Eq_Complex_Near
   subroutine expect_eq_complex_array(label, a, b, epsin)
     character(*), intent(in) :: label
     complex*16, intent(in) :: a(:), b(:)
@@ -174,7 +145,7 @@ contains
     character(*), intent(in) :: label
     complex*16, intent(in) :: a(:, :), b(:, :)
     real*8, optional, intent(in) :: epsin
-    real*8 :: c(size(a, 1), size(a, 2))
+    complex*16 :: c(size(a, 1), size(a, 2))!, absc(size(a, 1), size(a, 2))
     integer :: i, j
     real*8 :: eps
     if(present(epsin)) then
@@ -190,15 +161,22 @@ contains
     
     do i = 1, size(a, 1)
        do j = 1, size(b, 1)
-          c(i, j) = abs(a(i, j) - b(i, j))
+          c(i, j) = a(i, j) - b(i, j)
        end do
     end do
 
-    if(maxval(c) > eps) then
+    if(maxval(abs(c)) > eps) then
        call WriteFailed(label)
-       write(*, *) "a = ", a
-       write(*, *) "b = ", b
-       write(*, *) "|a-b|_oo = ", maxval(c)
+       do i = 1, size(a, 1)
+          do j = 1, size(a, 2)
+             if(abs(c(i,j))>eps) then
+                write(*, *) "i , j = ", i, j
+                write(*, *) "a", a(i,j)
+                write(*, *) "b", b(i,j)
+             end if
+          end do
+       end do
+       write(*, *) "|a-b|_oo = ", maxval(abs(c))
     else
        call WriteSuccess(label)
     end if

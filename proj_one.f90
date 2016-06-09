@@ -87,28 +87,36 @@ contains
   end subroutine print_usage
   ! ==== two electron case ====
   subroutine two_e_case()
-    use Mod_SymVec
+    use Mod_BlockVec
     complex*16, allocatable :: res(:, :, :)
-    integer, parameter :: ifile_in = 13
+    integer, parameter :: ifile = 13
     integer :: spin0 = 1 ! spin of final state ion
     integer :: isym0 = 1 ! symmetry of final state ion
-    complex*16 :: ene0
+    complex*16 :: ene0, x
     complex*16, allocatable :: cs0(:)
     character(32) :: symvec_path
-    integer :: i_csf, i, i1, i2, mo1, mo2, mo1_sym, mo2_isym
-    type(CSF) :: csf
-    type(SymVec) :: sym_vec
+    integer :: i_csf, i, i1, i2, mo1, mo2, mo1_sym, mo2_isym, ig1, ig2
+    type(CSF) :: csf    
+    type(BlockVec) :: block_vec, block_vec_mo
 
     namelist/two_e/spin0, isym0, symvec_path
-    open(unit = ifile_in, file = in_path, status='old')
-    rewind ifile_in
-    read(unit = ifile_in, nml = two_e)
-    close(unit = ifile_in)
+    open(unit = ifile, file = in_path, status='old')
+    read(unit = ifile, nml = two_e)
+    close(unit = ifile)
 
     write(*, *)
     write(*, *) "Two electron case"
     write(*, *) "spin0: ", spin0
     write(*, *) "isym0: ", isym0
+    write(*, *) "symvec_path: ", symvec_path
+
+    write(*, *) "read BlockVec"
+    open(unit = ifile, file = symvec_path)
+    call BlockVec_new_read(block_vec, ifile)
+    close(unit = ifile)
+
+    write(*, *) "MO transform"
+    call trans_symvec(block_vec, block_vec_mo)
 
     write(*, *) "diagonalize core hamiltonian"
     call diag_one_e(isym0, ene0, cs0)
@@ -130,6 +138,18 @@ contains
              mo1_sym = csf % mo_sym(i_sd, i1)
              mo2 = csf % mo(i_sd, i2)
              mo2_sym = csf % mo_sym(i_sd, i2)
+
+             x = (0.0d0, 0.0d0)
+             if(isym0 == mo2_sym) then
+                do ig1 = 1, 2
+                   do ig2 = 1, 2
+                      x = x + BlockVec_val(block_vec_mo, mo1_sym, mo1) * &
+                           cs0(ig1) * &
+                           BlockMat_val(oa % s_mat, mo2_sym, mo2_sym, ig1, ig2) * &
+                           BlockMat_val(mo % mo_coef, mo2_sym, mo2_sym, ig2, mo2)
+                   end do
+                end do
+             end if
           end do
        end do
     end do
@@ -177,30 +197,12 @@ contains
     deallocate(eigs); deallocate(vecs)
     
   end subroutine diag_one_e
-  subroutine trans_symvec(vec_in, trans_mat, vec_out)
+  subroutine trans_symvec(vec_in, vec_out)
     ! transform gto basis symmetry separated vector to MO basis
     type(BlockVec), intent(in) :: vec_in
-    type(BlockMat), intent(in) :: trans_mat
     type(BlockVec), intent(out) :: vec_out
-    integer :: isym, num
-    complex*16, allocatable :: mat(:, :)
-    complex*16, allocatable :: vin(:), vout(:)
 
-    call BlockVec_new_copy(vec_out, vec_in)
-
-    do isym = BlockVec_num_sym(vec_in)
-       num = BlockVec_size(vec_in, isym)
-       
-       allocate(mat(num, num)); allocate(vin(num)); allocate(vout(num))
-       
-       call BlockMat_get_block(trans_mat, isym, isym, mat)
-       call BlockVec_get_block(vec_in, isym, vin)
-       vout(:) = matmul(mat(:, :), vin(:))
-       call BlockVec_set_block(vec_out, isym, vout)
-       
-       deallocate(mat); deallocate(vin); deallocate(vout);
-    end do
-    
+    vec_out = block_matmul(mo % mo_coef, vec_in, 't')
     
   end subroutine trans_symvec
   subroutine delta_lm(L, M, r0, res)

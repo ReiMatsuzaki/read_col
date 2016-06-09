@@ -17,12 +17,12 @@ contains
 
     nst = size(num_ist)
     this % nst = nst
-    allocate(this % offset_ist(nst))
+    allocate(this % offset_ist(nst+1))
     allocate(this % num_ist(nst))
     allocate(this % val(sum(num_ist)))
     
     this % offset_ist(1) = 0
-    do ist = 2, nst
+    do ist = 2, nst + 1
        this % offset_ist(ist) = &
             this % offset_ist(ist-1) + num_ist(ist-1)
     end do
@@ -51,7 +51,7 @@ contains
   function BlockVec_num_sym(this)
     type(BlockVec), intent(in) :: this
     integer :: BlockVec_num_sym
-    BlockVec_num_sym = size(this % offset_ist)
+    BlockVec_num_sym = size(this % offset_ist) - 1
   end function BlockVec_num_sym
   function BlockVec_index(this, ist, i)
     type(BlockVec), intent(in) :: this
@@ -59,13 +59,17 @@ contains
     integer :: BlockVec_index
     BlockVec_index = this % offset_ist(ist) + i
   end function BlockVec_index
-  function BlockVec_size(this, ist)
+  function BlockVec_size(this)
+    type(BlockVec), intent(in) :: this
+    integer :: BlockVec_size
+    BlockVec_size = size(this % val)
+  end function BlockVec_size
+  function BlockVec_block_size(this, ist)
     type(BlockVec), intent(in) :: this
     integer, intent(in) :: ist
-    integer :: BlockVec_size
-    ! BlockVec_size = this % offset_ist(ist+1) - this % offset_ist(ist)
-    BlockVec_size = this % num_ist(ist)
-  end function BlockVec_size
+    integer :: BlockVec_block_size
+    BlockVec_block_size = this % offset_ist(ist+1) - this % offset_ist(ist)
+  end function BlockVec_block_size
   subroutine BlockVec_set_val(this, ist, i, ele)
     type(BlockVec), intent(inout) :: this
     integer, intent(in)         :: ist, i
@@ -80,7 +84,7 @@ contains
     complex*16, intent(in)      :: vals(:)
     integer :: n0, n1
 
-    if(BlockVec_size(this, ist) /= size(vals)) then
+    if(BlockVec_block_size(this, ist) /= size(vals)) then
        write(*, *) "BlockVec_set_block"
        write(*, *) "size mismatch"
        stop
@@ -105,7 +109,7 @@ contains
     complex*16, intent(out)      :: vals(:)
     integer :: n0, n1
 
-    if(BlockVec_size(this, ist) /= size(vals)) then
+    if(BlockVec_block_size(this, ist) /= size(vals)) then
        write(*, *) "BlockVec_get_block"
        write(*, *) "size mismatch"
        stop
@@ -116,13 +120,19 @@ contains
     vals(:) = this % val(n0:n1) 
     
   end subroutine BlockVec_get_block
+  subroutine BlockVec_get_array(this, res)
+    type(BlockVec), intent(inout) :: this
+    complex*16, intent(out)      :: res(:)
+    res(:) = this % val(:)
+
+  end subroutine BlockVec_get_array
   
   ! ==== I/O ====
   subroutine BlockVec_show(this)
     type(BlockVec), intent(in) :: this
     integer    :: ist, i
     do ist = 1, this % nst
-       do i = 1, this % num_ist(ist)
+       do i = 1, BlockVec_block_size(this, ist)
           write(*, *) ist, BlockVec_val(this, ist, i)
        end do
     end do
@@ -239,7 +249,7 @@ contains
 
     ! isym_iblock, jsym_iblock
     this % isym_iblock(:) = isym_iblock(:)
-    this % jsym_iblock(:) = isym_iblock(:)
+    this % jsym_iblock(:) = jsym_iblock(:)
 
     ! num_isym
     this % num_isym(:) = num_isym(:)
@@ -251,6 +261,9 @@ contains
        jsym = jsym_iblock(iblock)
        this % iblock_ijsym(isym, jsym) = iblock
     end do
+
+    ! values initialize
+    this % val = (0.0d0, 0.0d0)
     
   end subroutine BlockMat_new
   subroutine BlockMat_delete(this)
@@ -336,7 +349,7 @@ contains
     complex*16 :: BlockMat_val
     BlockMat_val = this % val(BlockMat_index(this, isym, jsym, i, j))
   end function BlockMat_Val
-  subroutine BlockMat_block(this, isym, jsym, res)
+  subroutine BlockMat_get_block(this, isym, jsym, res)
     type(BlockMat) this
     integer, intent(in) :: isym, jsym
     integer :: iblock, idx1, idx2, num(2)
@@ -348,8 +361,30 @@ contains
     num = BlockMat_block_size(this, isym, jsym)
     res(:, :) = reshape(this % val(idx1+1 : idx2), num)
          
-  end subroutine BlockMat_block
+  end subroutine BlockMat_get_block
+  subroutine BlockMat_get_array(this, res)
+    type(BlockMat) this
+    complex*16, intent(out) :: res(:, :)
+    integer iblock, isym, jsym, i, j, ni, nj, nij(2), n0i, n0j
+    res(:, :) = (0.0d0, 0.0d0)
 
+    do iblock = 1, size(this % isym_iblock)
+       isym = this % isym_iblock(iblock)
+       jsym = this % jsym_iblock(iblock)
+       nij = BlockMat_block_size(this, isym, jsym)
+       ni = nij(1); nj = nij(2)
+       n0i = sum(this % num_isym(1:isym)) - this % num_isym(isym)
+       n0j = sum(this % num_isym(1:jsym)) - this % num_isym(jsym)
+       do i = 1, ni
+          do j = 1, nj
+             res(n0i+i, n0j+j) = BlockMat_val(this, isym, jsym, i, j)
+          end do
+       end do
+       
+    end do
+    
+  end subroutine BlockMat_get_array
+  
   ! ==== I/O ====
   subroutine BlockMat_show(this)
     type(BlockMat) this
@@ -461,7 +496,11 @@ contains
        stop
     end if
 
-    if((t .eq. 'T') .or. (t .eq. 't')) then
+    if(present(t)) then
+       if((t .eq. 'T') .or. (t .eq. 't')) then
+          call block_matmul_transpose(M, v, block_matmul)          
+       end if
+    else
        call block_matmul_normal(M, v, block_matmul)
     end if
     
@@ -470,7 +509,8 @@ contains
     type(BlockMat), intent(in) :: M
     type(BlockVec), intent(in) :: v
     type(BlockVec), intent(out) :: res
-    integer iblock, isym, jsym, num_sym, idx0, idx1, ni, nj, idx2, idx3
+    integer iblock, isym, jsym, num_sym, idx0, idx1, ni, nj, idx2, idx3, i, j
+    complex*16 :: tmp
 
     num_sym = BlockVec_num_sym(v)
     call BlockVec_new_copy(res, v)
@@ -486,21 +526,49 @@ contains
        idx1 = M % offset_iblock(iblock+1)
        idx2 = v % offset_ist(iblock) + 1
        idx3 = v % offset_ist(iblock+1)
-!       do i = 1, ni
-!          res % val(res % offset_ist(isym)+i) = res % val(res % offset_ist(isym)+i) &
-!               + M % val(M % offset_iblock(iblock) + )
-!          res % offset_ist(isym) + 1, res % offset_ist(isym+1)
-!          do j = 1, nj
-!             res % val(i) = res % val(i)
-!          end do
-!       end do
-       call BlockVec_set_block(res, isym, &
-            matmul(reshape(M % val(idx0:idx1), (/ni, nj/)), v % val(idx2:idx3)))
+       do i = 1, ni
+          tmp = BlockVec_val(res, isym, i)
+          do j  = 1, nj
+             tmp = tmp + &
+                  BlockMat_val(M, isym, jsym, i, j)  * &
+                  BlockVec_val(v, jsym, j)
+          end do
+          call BlockVec_set_val(res, isym, i, tmp)
+       end do
+!       call BlockVec_set_block(res, isym, &
+!            matmul(reshape(M % val(idx0:idx1), (/ni, nj/)), v % val(idx2:idx3)))
     end do
   end subroutine block_matmul_normal
-!  subroutine block_matmul_transpose(M, v, res)
-!    type(BlockMat), intent(in) :: M
-!    type(BlockVec), intent(in) :: v
-!    type(BlockVec), intent(out) :: res    
-!  end subroutine block_matmul_transpose
+  subroutine block_matmul_transpose(M, v, res)
+    type(BlockMat), intent(in) :: M
+    type(BlockVec), intent(in) :: v
+    type(BlockVec), intent(out) :: res
+    integer iblock, isym, jsym, num_sym, idx0, idx1, ni, nj, idx2, idx3, i, j
+    complex*16 :: tmp
+
+    num_sym = BlockVec_num_sym(v)
+    call BlockVec_new_copy(res, v)
+
+    res % val(:) = (0.0d0, 0.0d0)
+
+    do iblock = 1, size(M % isym_iblock)
+       isym = M % isym_iblock(iblock)
+       jsym = M % jsym_iblock(iblock)
+       ni = M % num_isym(isym)
+       nj = M % num_isym(jsym)
+       idx0 = M % offset_iblock(iblock) + 1
+       idx1 = M % offset_iblock(iblock+1)
+       idx2 = v % offset_ist(iblock) + 1
+       idx3 = v % offset_ist(iblock+1)
+       do j = 1, nj
+          tmp = BlockVec_val(res, jsym, j)
+          do i = 1, ni
+             tmp = tmp + &
+                  BlockMat_val(M, isym, jsym, i, j)  * &
+                  BlockVec_val(v, isym, i)
+          end do
+          call BlockVec_set_val(res, jsym, j, tmp)
+       end do
+    end do    
+  end subroutine block_matmul_transpose
 end module Mod_BlockLinearAlgebra
